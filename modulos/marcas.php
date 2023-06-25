@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 if($_SESSION[user]==0)
 {
     echo "<script>window.location='index.php';</script>";
@@ -13,26 +14,11 @@ if($_GET[add]=="ok")
     
     if(($_POST[nombre]!=""))
     {
-        //logo
-        $archivo=$_FILES['logo']['name'];
-        if($archivo!="")
-        {
-            $extension = explode(".",$archivo);
-            if((end($extension)=="jpg") || (end($extension)=="jpeg") || (end($extension)=="JPG") || (end($extension)=="JPEG") || (end($extension)=="png"))
-            {
-                if (is_uploaded_file($_FILES['logo']['tmp_name'])) 
-                {
-                   $qu=time();
-                   copy($_FILES['logo']['tmp_name'], "marcas/".$qu.".".end($extension));
-                }
-            }
-            $archivo=$qu.".".end($extension);
-        }
-        //fin de logo
+        
 
-            $sql=mysqli_query($con,"insert into marcas (nombre, id_proveedor, logo) values(lower('$_POST[nombre]'), $_POST[proveedor], '$archivo')");
+            $sql=mysqli_query($con,"insert into marcas (nombre) values(lower('$_POST[nombre]'))");
             
-            if(!mysqli_error())
+            if(!mysqli_error($con))
             {
                 
                 echo "<script>alert('Registro Insertado Correctamente.');</script>";
@@ -54,28 +40,8 @@ if($_GET[mod]=="ok")
 
     if(($_POST[nombre]!=""))
     {
-        //logo
-        $archivo=$_FILES['logo']['name'];
-        if($archivo!="")
-        {
-            $extension = explode(".",$archivo);
-            if((end($extension)=="jpg") || (end($extension)=="jpeg") || (end($extension)=="JPG") || (end($extension)=="JPEG") || (end($extension)=="png"))
-            {
-                if (is_uploaded_file($_FILES['logo']['tmp_name'])) 
-                {
-                   $qu=time();
-                   copy($_FILES['logo']['tmp_name'], "marcas/".$qu.".".end($extension));
-                }
-            }
-            $archivo=", logo='".$qu.".".end($extension)."'";
-        }
-            else
-            {
-                $archivo="";
-            }
-        //fin de logo
-                    
-            $sql=mysqli_query($con,"update marcas set nombre=lower('$_POST[nombre]'), id_proveedor=$_POST[proveedor] $archivo where id=$_POST[id]");
+        
+            $sql=mysqli_query($con,"update marcas set nombre=lower('$_POST[nombre]') where id_marca=$_POST[id_marca]");
 
             if(!mysqli_error())
             {
@@ -95,12 +61,13 @@ if($_GET[mod]=="ok")
         }
 }
 
+
 if($_GET[del]!="")
 {
 
-        $sql=mysqli_query($con,"update marcas set activo='no' where id=$_GET[del]");
+        $sql=mysqli_query($con,"delete from marcas where id_marca=$_GET[del]");
         
-        if(!mysqli_error())
+        if(!mysqli_error($con))
         {
             echo "<script>alert('Registro Eliminado Correctamente.');</script>";
             echo "<script>window.location='home.php?pagina=marcas';</script>";
@@ -121,7 +88,7 @@ if($_GET[del]!="")
                      <!-- Page Heading -->
                         <div class="card shadow mb-4" id="headingOne">
                             <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseNuevo" aria-expanded="false" aria-controls="collapseNuevo">Nueva marca</h6>
+                            <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseNuevo" aria-expanded="false" aria-controls="collapseNuevo">Nueva Marca</h6>
                             </div>
                
                <?php
@@ -129,7 +96,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from marcas where id=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from marcas where id_marca=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -152,31 +119,9 @@ if($_GET[del]!="")
                                     <label for="nombre">Nombre</label>
                                     <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $r['nombre']; ?>" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="logo">Logo</label>
-                                    <input type="file" class="form-control" id="logo" name="logo">
-                                </div>
-                                <div class="form-group">
-                                    <label for="nombre">Proveedor</label>
-                                    <select name="proveedor" id="proveedor" class="form-control bg-light border-0 small" placeholder="Proveedor"  aria-label="Proveedor
-                                    " aria-describedby="basic-addon2" style="margin-right: 1%;" required>
-                                        <option value="">Seleccione...</option>
-                                        <?php
-                                        $sql_g=mysqli_query($con,"select *from proveedores where activo='si' order by nombre");
-                                        if(mysqli_num_rows($sql_g)!=0)
-                                        {
-                                            while($r_g=mysqli_fetch_array($sql_g))
-                                            {
-                                                ?>
-                                                <option value="<?php echo $r_g['id'];?>" <?php if($r_g['id']==$r['id_proveedor']){?> selected <?php }?>><?php echo $r_g['nombre'];?></option>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
+                             
 
-                                <input type="hidden" name="id" id="id" value="<?php echo $r['id']; ?>">    
+                                <input type="hidden" name="id_marca" id="id_marca" value="<?php echo $r['id_marca']; ?>">    
                                 <button type="submit" class="btn btn-primary" style="float:right;">Guardar</button>
                                 </form>
                             </div>
@@ -198,38 +143,27 @@ if($_GET[del]!="")
                                     <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Proveedor</th>
-                                        <th>Logo</th>
+                                    
                                         <th>Opciones</th>
                                     </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Proveedor</th>
-                                        <th>Logo</th>
+                                      
                                         <th>Opciones</th>
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select m.id, m.nombre, m.logo, p.nombre as nombre_proveedor from marcas m, proveedores p where p.id=m.id_proveedor and m.activo='si' order by p.nombre, m.nombre"); 
+                                        <?php $q=mysqli_query($con,"select * from marcas order by nombre"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
-                                                     <td><?php echo $r['nombre']; ?></td>
-                                                     <td><?php echo $r['nombre_proveedor']; ?></td>
-                                                     <td style="text-align: center;">
-                                                        <?php
-                                                        if(!empty($r['logo']))
-                                                            {
-                                                                ?>
-                                                                <img src="marcas/<?php echo $r['logo'];?>" width="100" />
-                                                                <?php
-                                                            } 
-                                                        ?>  
-                                                    </td>
-                                                     <td><a href="home.php?pagina=marcas&ver=<?php echo $r['id'] ?>" title="Editar" alt="Editar"><i class="fas fa-edit icono_editar"></i></a> 
-                                                        <a href="javascript:if(confirm('Esta Seguro?')){ window.location='home.php?pagina=marcas&del=<?php echo $r['id'] ?>'; }" title="Eliminar" alt="Eliminar"><i class="fas fa-eraser icono_borrar"></i></a></td>
+                                                     <td><?php echo $r['nombre']; ?></td>                                                    
+                                                     <td>
+                                                        <a href="home.php?pagina=marcas&ver=<?php echo $r['id_marca'] ?>" title="Editar" alt="Editar"><i class="fas fa-edit icono_editar"></i></a>
+                                                        <a href="javascript:if(confirm('Esta Seguro?')){ window.location='home.php?pagina=marcas&del=<?php echo $r['id_marca'] ?>'; }" title="Eliminar" alt="Eliminar"><i class="fas fa-eraser icono_borrar"></i></a>
+                                                     </td>
                                                  </tr>       
                                              <?php }
                                              }?>       
