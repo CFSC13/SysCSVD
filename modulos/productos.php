@@ -39,10 +39,19 @@ if($_GET['add']=="ok")
             echo "<p>Error: Debe seleccionar un archivo.</p>";
             }  
 
-             echo $_POST['nombre'];      
+             echo $_POST['nombre']; 
+             
+             $esDeLibreria = isset($_POST['libreria']) && $_POST['libreria'] == 'on';
+
+             if ($esDeLibreria) {
+                $esDeLibreria=1;
+             } else {
+                $esDeLibreria=0;
+             }
+             
        
-         $sql = mysqli_query($con, "INSERT INTO productos (codigo_barra, nombre, descripcion, precio, stock, foto, id_categoria)
-         VALUES ('$_POST[codigo_barra]', lower('$_POST[nombre]'), '$_POST[descripcion]', '$_POST[precio]', '$_POST[stock]', '$archivo', $_POST[id_categoria])");
+         $sql = mysqli_query($con, "INSERT INTO productos (codigo_barra, nombre, descripcion, libreria, precio, stock, foto, id_categoria, id_marca)
+         VALUES ('$_POST[codigo_barra]', lower('$_POST[nombre]'), '$_POST[descripcion]', '$esDeLibreria', '$_POST[precio]', '$_POST[stock]', '$archivo', $_POST[id_categoria], $_POST[id_marca])");
 
          echo mysqli_error($con);
 
@@ -89,9 +98,16 @@ if ($_GET['mod'] == "ok") {
                 echo "<p>Error: El archivo debe ser una imagen.</p>";
             }
         }
-        
+
+        $esDeLibreria = isset($_POST['libreria']) && $_POST['libreria'] == 'on';
+
+             if ($esDeLibreria) {
+                $esDeLibreria=1;
+             } else {
+                $esDeLibreria=0;
+             }
         // Construir la consulta SQL
-        $sql = "UPDATE productos SET codigo_barra='" . $_POST['codigo_barra'] . "', nombre=lower('" . $_POST['nombre'] . "'), descripcion='" . $_POST['descripcion'] . "', precio='" . $_POST['precio'] . "', stock='" . $_POST['stock'] . "', id_categoria='" . $_POST['id_categoria'] . "'";
+        $sql = "UPDATE productos SET codigo_barra='" . $_POST['codigo_barra'] . "', nombre=lower('" . $_POST['nombre'] . "'), descripcion='" . $_POST['descripcion'] . "', libreria='" . $esDeLibreria. "', precio='" . $_POST['precio'] . "', stock='" . $_POST['stock'] . "', id_categoria='" . $_POST['id_categoria'] ."', id_marca='" . $_POST['id_marca'] . "'";
         
         if (!empty($archivo)) {
             $sql .= ", " . $archivo;
@@ -201,14 +217,15 @@ if($_GET[del]!="")
                                     <label for="nombre">Stock</label>
                                     <input type="number" class="form-control" id="stock" name="stock" value="<?php echo $r['stock']; ?>" required>
                                 </div>
+                                <br>
 
                                 <div class="form-group">
                                     <label for="nombre">Foto</label>
                                     <input type="file" name="foto" id="foto" >
                                     <input type="hidden" name="foto_actual" id="foto_actual" value="<?php echo $r['foto'];?>">
                                 </div>
+                                <br>
 
-                               
                                 <div class="form-group">
                                     <label for="nombre">Categoría</label>
                                     <select name="id_categoria" id="id_categoria" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
@@ -226,7 +243,36 @@ if($_GET[del]!="")
                                         }
                                         ?>
                                     </select>
-                                </div>                             
+                                </div>  
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="nombre">Marca</label>
+                                    <select name="id_marca" id="id_marca" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
+                                        <option value="">Seleccione...</option>
+                                        <?php
+                                        $sql_g=mysqli_query($con,"select * from marcas order by nombre");
+                                        if(mysqli_num_rows($sql_g)!=0)
+                                        {
+                                            while($r_g=mysqli_fetch_array($sql_g))
+                                            {// el value es el id_categoria que paso por post al submitir ///////si id_categoria en categoria == id_categoria en productio entonces selecciono //////y muestro nombre de la categoria
+                                                ?>
+                                                <option value="<?php echo $r_g['id_marca'];?>" <?php if($r_g['id_marca']==$r['id_marca']){?> selected <?php }?>><?php echo $r_g['nombre'];?></option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>  
+                                <br>
+                                
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="libreria" name="libreria" <?php if ($r['libreria']) echo 'checked'; ?>>
+                                        <label class="form-check-label" for="libreria">Es de Librería</label>
+                                    </div>
+                                </div>
+
                             
                                 <input type="hidden" name="id_producto" id="id_producto" value="<?php echo $r['id_producto']; ?>"> 
                                 <button type="submit" class="btn btn-primary" style="float:right;">Guardar</button>
@@ -258,6 +304,8 @@ if($_GET[del]!="")
                                         <th>Stock</th>
                                         <th>Foto</th>
                                         <th>Categoria</th>
+                                        <th>Marca</th>
+                                        <th>Librería</th>
                                         <th>Opciones</th>
 
                                     </tr>
@@ -271,16 +319,20 @@ if($_GET[del]!="")
                                         <th>Stock</th>
                                         <th>Foto</th>
                                         <th>Categoria</th>
+                                        <th>Marca</th>
+                                        <th>Librería</th>
                                         <th>Opciones</th>
 
                                     </tr>
                                     </tfoot>
                                     <tbody>
                                         <?php $q=mysqli_query($con,"SELECT id_producto, foto, descripcion, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
-                                                                    C.Nombre as 'NonbreC' 
+                                                                    C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
                                                                     FROM productos P 
                                                                     JOIN categorias C 
                                                                     ON P.id_categoria = C.id_categoria
+                                                                    JOIN marcas M 
+                                                                    ON P.id_marca = M.id_marca
                                                                     order by P.nombre;"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
@@ -302,8 +354,16 @@ if($_GET[del]!="")
                                                                 <?php
                                                             }
                                                             ?>
-                                                    </td>
+                                                    </td>                                                    
                                                     <td><?php echo $r['NonbreC']; ?></td>
+                                                    <td><?php echo $r['marca']; ?></td>
+                                                    <td><?php 
+                                                        if($r['libreria']==1){
+                                                            echo "Si";
+                                                        } else{
+                                                            echo "No";
+                                                        } ?>
+                                                    </td>
                                                      <td>
                                                         <a href="home.php?pagina=productos&ver=<?php echo $r['id_producto'] ?>" title="Editar" alt="Editar"><i class="fas fa-edit icono_editar"></i></a> 
                                                         <a href="javascript:if(confirm('Esta Seguro?')){ window.location='home.php?pagina=productos&del=<?php echo $r['id_producto'] ?>'; }" title="Eliminar" alt="Eliminar"><i class="fas fa-eraser icono_borrar"></i></a>
