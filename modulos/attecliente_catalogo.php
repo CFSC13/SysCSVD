@@ -29,7 +29,7 @@ if($_SESSION[user]==0)
          <!-- Page Heading -->
          <div class="card shadow mb-4 mx-auto" >
                         <div class="card-header py-3" id="headingTwo">
-                        <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Productos</h6>
+                        <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Catalogo</h6>
                         </div>
                         <div id="collapseListado" class="collapse <?php echo $showtable; ?>" aria-labelledby="headingTwo" data-parent="#accordion">
                             <div class="card-body" >
@@ -45,7 +45,9 @@ if($_SESSION[user]==0)
                                         <th>Stock</th>
                                         <th>Foto</th>
                                         <th>Categoria</th>
-
+                                        <th>Marca</th>
+                                        <th>Libreia</th>
+                                    
                                     </tr>
                                     </thead>
                                     <tfoot>
@@ -57,16 +59,20 @@ if($_SESSION[user]==0)
                                         <th>Stock</th>
                                         <th>Foto</th>
                                         <th>Categoria</th>
+                                        <th>Marca</th>
+                                        <th>Libreia</th>
 
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"SELECT id_producto, foto, descripcion, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
-                                                                    C.Nombre as 'NonbreC' 
+                                        <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.descripcion, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
+                                                                    C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
                                                                     FROM productos P 
                                                                     JOIN categorias C 
                                                                     ON P.id_categoria = C.id_categoria
-                                                                    order by P.nombre;"); 
+                                                                    JOIN marcas M 
+                                                                    ON P.id_marca = M.id_marca
+                                                                    order by P.nombre;");  
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
@@ -88,8 +94,14 @@ if($_SESSION[user]==0)
                                                         }
                                                         ?>
                                                     </td>
-                                                    <td><?php echo $r['NonbreC']; ?>
-                                                        <a href="home.php?pagina=productos&ver=<?php echo $r['id_producto'] ?>"
+                                                    <td><?php echo $r['NonbreC']; ?></td>
+                                                    <td><?php echo $r['marca']; ?></td>
+                                                    <td><?php 
+                                                        if($r['libreria']==1){
+                                                            echo "Si";
+                                                        } else{
+                                                            echo "No";
+                                                        } ?>
                                                     </td>
                                                  </tr>                                                   
                                              <?php }
@@ -99,6 +111,10 @@ if($_SESSION[user]==0)
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card-header py-3" id="headingTwo">
+                            <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Catalogo de Clientes <a href="modulos/clientes_catalogo.php" title="Catalogo Clientes" alt="Catalogo Clientes"><i class="fa fa-list-alt"></i></a> </h6>
+                                  
                         </div>
                     </div>
                 </div>
