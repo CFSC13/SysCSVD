@@ -1,1 +1,102 @@
-CATALOGO DE CLIENTES
+<?php
+include("../includes/conexion.php");
+conectar();
+
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="SysCSVD - Sistema de Gestión">
+    <meta name="author" content="ADM">
+    <title>SysCSVD - Catalogo de Clientes</title>
+    <style>
+        table, th, td{
+            border: 3px solid black;
+        }
+        body{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>CATALOGO</h1> 
+    <?php
+        $showform="";
+        $showtable="";
+        if($_GET[ver]!=0)
+        {
+            $sql=mysqli_query($con,"select *from productos where id_producto=$_GET[ver]");
+                if(mysqli_num_rows($sql)!=0)
+                {   
+                    $r=mysqli_fetch_array($sql);
+                }
+                $url="home.php?pagina=productos&mod=ok";
+                $showform="show";
+        }
+            else
+            {
+                $url="home.php?pagina=productos&add=ok";
+                $showtable="show";
+            }
+    ?>
+
+    <table style="width: 100%; ">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoria</th>
+                <th>Marca</th>
+                <th>Libreria</th>
+
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoria</th>
+                <th>Marca</th>
+                <th>Libreria</th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+        <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.descripcion, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
+                                    C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
+                                    FROM productos P 
+                                    JOIN categorias C 
+                                    ON P.id_categoria = C.id_categoria
+                                    JOIN marcas M 
+                                    ON P.id_marca = M.id_marca
+                                    order by P.nombre;");  
+            if(mysqli_num_rows($q)!=0){
+                while($r=mysqli_fetch_array($q)){?>
+                    <tr>
+                        <td><?php echo $r['NombreP']; ?></td>
+                        <td><?php echo $r['descripcion']; ?></td>
+                        <td>$ <?php echo number_format($r['PrecioP'],2,',','.'); ?></td>
+                        <td><?php echo $r['NonbreC']; ?></td>
+                        <td><?php echo $r['marca']; ?></td>
+                        <td><?php 
+                            if($r['libreria']==1){
+                                echo "Si";
+                            } else{
+                                echo "No";
+                            } ?>
+                        </td>
+                    </tr>                                                   
+                <?php }
+                }?>       
+                                            
+        </tbody>
+    </table>
+</body>
