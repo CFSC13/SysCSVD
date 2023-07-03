@@ -46,7 +46,7 @@ if($_SESSION[user]==0)
                                         <th>Foto</th>
                                         <th>Categoria</th>
                                         <th>Marca</th>
-                                        <th>Libreia</th>
+                                        <th>Libreria</th>
                                     
                                     </tr>
                                     </thead>
@@ -60,7 +60,7 @@ if($_SESSION[user]==0)
                                         <th>Foto</th>
                                         <th>Categoria</th>
                                         <th>Marca</th>
-                                        <th>Libreia</th>
+                                        <th>Libreria</th>
 
                                     </tr>
                                     </tfoot>
