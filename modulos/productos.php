@@ -35,9 +35,9 @@ if($_GET['add']=="ok")
                         echo "<p>Error: El archivo debe ser una IMG</p>";
                     }
                 }
-        else{
-            echo "<p>Error: Debe seleccionar un archivo.</p>";
-            }  
+        //else{
+            //echo "<p>Error: Debe seleccionar un archivo.</p>";
+           // }  
 
              echo $_POST['nombre']; 
              
@@ -94,9 +94,9 @@ if ($_GET['mod'] == "ok") {
                 } else {
                     echo "<p>Error: No se pudo subir el archivo.</p>";
                 }
-            } else {
-                echo "<p>Error: El archivo debe ser una imagen.</p>";
-            }
+            //} else {
+              //  echo "<p>Error: El archivo debe ser una imagen.</p>";
+            //}
         }
 
         $esDeLibreria = isset($_POST['libreria']) && $_POST['libreria'] == 'on';
