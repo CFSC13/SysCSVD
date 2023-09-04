@@ -5,6 +5,7 @@ if($_SESSION[user]==0)
 {
     echo "<script>window.location='index.php';</script>";
 }
+
 ?>
     <?php
         $showform="";
