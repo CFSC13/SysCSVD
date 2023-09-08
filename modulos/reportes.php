@@ -8,47 +8,28 @@
 
     <table id="datatable">
         <?php
-            $r=mysqli_query($con,"SELECT v.fecha_de_venta, d.cantidad, d.precio_unitario, d.subtotal, p.nombre from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto order by v.fecha_de_venta;") //agrupar datos con GROUP BY por year, month, wekk
-        ?>
-        <thead>
-            <tr>
-                <th></th>
-                <th>Boys</th>
-                <th>Girls</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>2016</th>
-                <td>30 386</td>
-                <td>28 504</td>
-            </tr>
-            <tr>
-                <th>2017</th>
-                <td>29 173</td>
-                <td>27 460</td>
-            </tr>
-            <tr>
-                <th>2018</th>
-                <td>28 430</td>
-                <td>26 690</td>
-            </tr>
-            <tr>
-                <th>2019</th>
-                <td>28 042</td>
-                <td>26 453</td>
-            </tr>
-            <tr>
-                <th>2020</th>
-                <td>27 063</td>
-                <td>25 916</td>
-            </tr>
-            <tr>
-                <th>2021</th>
-                <td>28 684</td>
-                <td>27 376</td>
-            </tr>
-        </tbody>
+            $q=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Año, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad))) as Ganancias from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto join detalles_compras c on c.id_producto = d.id_producto group by p.nombre, YEAR(v.fecha_de_venta);") //agrupar datos con GROUP BY por year, month, wekk
+
+            //if(mysqli_num_rows($q)!=0){
+              //  while($r=mysqli_fetch_array($q)){?>
+                <?php if(mysqli_num_rows($q)!=0){ ?>
+                    <thead>
+                        <tr>
+                            <?php  while($r=mysqli_fetch_array($q)){ ?>
+                            <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
+                            <th><?php echo $r['Producto'] ?></th> <!--Producto 1-->  
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><?php echo $r['Año'] ?></th> <!--Año-->
+                            <td><?php echo $r['Ganancias'] ?></td> <!--ganancia 1 Producto-->
+                                    <?php }; ?>
+                        </tr>
+                    </tbody>
+                <?php }; ?>          
+                <?php //}
+            //}?> 
     </table>
 </figure>
 
@@ -149,7 +130,7 @@ Highcharts.chart('container', {
 
     <!-- Content Row -->
     <div class="row">
-        <?php $s=mysqli_query($con,"SELECT id_venta from ventas WHERE MONTH(fecha_de_venta) = 08 AND YEAR(fecha_de_venta) = 2023;") ?> 
+        <?php $s=mysqli_query($con,"SELECT * FROM ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE());") ?> 
         <!--SQL FECHA ACTUAL: SELECT * FROM ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE())-->
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
@@ -158,7 +139,7 @@ Highcharts.chart('container', {
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)</div>
+                                Ventas del Mes</div>
 
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo mysqli_num_rows($s) ?></div>
                         </div>
