@@ -191,12 +191,33 @@ if($_GET['del']!="")
 
                             <div class="form-group">
                                     
+                          
                             <div style="width: 270px" id="reader"></div>
-                                    <br>
-
+                       
+                                    <br>                             
+                               <fieldset class="border p-2">
+                                    <legend class="w-auto h4">Agregar Productos</legend>
+                                <div class="form-group">
+                                    <select name="producto_manual" id="producto_manual" class="form-control small" placeholder="Producto"  aria-label="Producto
+                                    " aria-describedby="basic-addon2" style="margin-right: 1%; width: 100%;" onchange="buscarProductoManual(this.value)">
+                                        <option value="">Seleccione...</option>
+                                        <?php
+                                        $sql_g=mysqli_query($con,"select * from productos");
+                                        if(mysqli_num_rows($sql_g)!=0)
+                                        {
+                                            while($r_g=mysqli_fetch_array($sql_g))
+                                            {
+                                                ?>
+                                                <option data-precio="<?php echo $r_g[precio]; ?>" data-cod="<?php echo $r_g[id_producto]; ?>" value="<?php echo $r_g['codigo_barra'];?>"><?php echo $r_g['nombre'];?></option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                                 <div class="form-group" style="display: none">
                                     <label for="id_producto">Id Producto:</label>
-                                    <input type="number" class="form-control" id="id" name="id" value="" disabled>
+                                    <input type="number" class="form-control" id="id" name="id" value="" >
                                 </div>
 
                                 <div class="form-group">
@@ -308,46 +329,17 @@ if($_GET['del']!="")
                 updateSubtotal();
             }
 </script>  
+
 </script>    
-<script src="vendor/ckeditor/ckeditor.js"></script> 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script type="text/javascript">
- //inicio editor
-    CKEDITOR.replace('descripcion',
-      {
-        height  : '500px',
-        width   : '100%',
 
-        toolbar : [
-        { name: 'document', items : [ 'Undo','Redo','-','NewPage','DocProps','Preview','Print'] },
-        { name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-' ] },
-        { name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },'/',
-        { name: 'basicstyles', items : [ 'Bold','Italic','Underline','-','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-        { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv',
-        '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
-        { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-        { name: 'insert', items : [ 'Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
-        '/',
-        { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
-        { name: 'colors', items : [ 'TextColor','BGColor' ] },
-        { name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','Source'] },
-
-        ],
-        filebrowserUploadUrl: "upload.php",
-        allowedContent: true
-      });
-    //fin editor
-</script>
 
 <script>
 $(document).ready( function () {
     //combo de productos
-    $('#productos').select2();
-    $("#productos").focus();
-    //combo de clientes
-    $('#clientes').select2();
-    $("#clientes").focus();
+    $('#producto_manual').select2();
+  
 
 $(document).on('select2:open', () => {
     document.querySelector('.select2-search__field').focus();
@@ -386,10 +378,44 @@ $(document).on('select2:open', () => {
 
 </script>
 
+
 <script>
+    
     var html5QrcodeScanner = new Html5QrcodeScanner(
-	"reader", { fps: 1, qrbox: 250 });
+	"reader", { fps: 600, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess);
+
+
+function buscarProductoManual(codigo){
+  $.ajax({
+    url: "https://579f-138-186-161-227.ngrok-free.app/syscsvd/buscarAjax.php",
+    //url: "http://localhost/syscsvd/buscarAjax.php",
+    data: { w1: codigo },
+    type: "GET",
+    //especifica que se recibe en formato JSON y no hace falta usar el parse
+    //dataType: "json",
+    success: function (response) {
+        if (!response.error) {
+            // Emite un sonido al escanear un código si se recibe un response
+            var beepSound = document.getElementById("beep");
+            
+            //aca se convirte el string en JSON
+            let tasks = JSON.parse(response);           
+            $('#nombre').val(tasks[0].name);
+            $('#precio').val(tasks[0].price);
+            $('#id').val(tasks[0].id);
+
+            beepSound.play();
+              // Llama a la función AddProductos() después de actualizar los campos
+            //AddProductos();        
+                
+                }
+                } ,
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Manejar errores aquí
+                }
+            });
+}
 
 
 function onScanSuccess(decodedText, decodedResult) {
@@ -403,7 +429,7 @@ function onScanSuccess(decodedText, decodedResult) {
   var scanInputValue = decodedText;
 
   $.ajax({
-    url: "https://65a4-138-186-162-68.ngrok-free.app/SysCSVD//buscarAjax.php",
+    url: "https://579f-138-186-161-227.ngrok-free.app/syscsvd/buscarAjax.php",
     //url: "http://localhost/syscsvd/buscarAjax.php",
     data: { w1: scanInputValue },
     type: "GET",
@@ -413,12 +439,14 @@ function onScanSuccess(decodedText, decodedResult) {
         if (!response.error) {
             // Emite un sonido al escanear un código si se recibe un response
             var beepSound = document.getElementById("beep");
-            beepSound.play();
+            
             //aca se convirte el string en JSON
             let tasks = JSON.parse(response);           
             $('#nombre').val(tasks[0].name);
             $('#precio').val(tasks[0].price);
             $('#id').val(tasks[0].id);
+
+            beepSound.play();
               // Llama a la función AddProductos() después de actualizar los campos
             //AddProductos();        
                 
