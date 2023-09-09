@@ -50,8 +50,8 @@ if($_GET['add']=="ok")
              }
              
        
-         $sql = mysqli_query($con, "INSERT INTO productos (codigo_barra, nombre, descripcion, libreria, precio, stock, foto, id_categoria, id_marca)
-         VALUES ('$_POST[codigo_barra]', lower('$_POST[nombre]'), '$_POST[descripcion]', '$esDeLibreria', '$_POST[precio]', '$_POST[stock]', '$archivo', $_POST[id_categoria], $_POST[id_marca])");
+         $sql = mysqli_query($con, "INSERT INTO productos (codigo_barra, nombre, descripcion, libreria, precio, stock, stock_minimo, foto, id_categoria, id_marca)
+         VALUES ('$_POST[codigo_barra]', lower('$_POST[nombre]'), '$_POST[descripcion]', '$esDeLibreria', '$_POST[precio]', '$_POST[stock]', '$_POST[stock_minimo]', '$archivo', $_POST[id_categoria], $_POST[id_marca])");
 
          echo mysqli_error($con);
 
@@ -107,7 +107,7 @@ if ($_GET['mod'] == "ok") {
                 $esDeLibreria=0;
              }
         // Construir la consulta SQL
-        $sql = "UPDATE productos SET codigo_barra='" . $_POST['codigo_barra'] . "', nombre=lower('" . $_POST['nombre'] . "'), descripcion='" . $_POST['descripcion'] . "', libreria='" . $esDeLibreria. "', precio='" . $_POST['precio'] . "', stock='" . $_POST['stock'] . "', id_categoria='" . $_POST['id_categoria'] ."', id_marca='" . $_POST['id_marca'] . "'";
+        $sql = "UPDATE productos SET codigo_barra='" . $_POST['codigo_barra'] . "', nombre=lower('" . $_POST['nombre'] . "'), descripcion='" . $_POST['descripcion'] . "', libreria='" . $esDeLibreria. "', precio='" . $_POST['precio'] . "', stock='" . $_POST['stock'] . "', stock_minimo='" . $_POST['stock_minimo'] . "', id_categoria='" . $_POST['id_categoria'] ."', id_marca='" . $_POST['id_marca'] . "'";
         
         if (!empty($archivo)) {
             $sql .= ", " . $archivo;
@@ -218,6 +218,11 @@ if($_GET[del]!="")
                                     <input type="number" class="form-control" id="stock" name="stock" value="<?php echo $r['stock']; ?>" required>
                                 </div>
                                 <br>
+                                <div class="form-group">
+                                    <label for="nombre">Stock Mínimo</label>
+                                    <input type="number" class="form-control" id="stock_minimo" name="stock_minimo" value="<?php echo $r['stock_minimo']; ?>" required>
+                                </div>
+                                <br>
 
                                 <div class="form-group">
                                     <label for="nombre">Foto</label>
@@ -296,12 +301,13 @@ if($_GET[del]!="")
                                     <table class="table table-bordered display nowrap" id="dataTable-mensajes" width="100%" cellspacing="0">
                                     <thead>
                                     
-                                    <tr>
-                                        <th>Codigo de Barras</th>
+                                    <tr>                                       
                                         <th>Nombre</th>
+                                        <th>Codigo de Barras</th>
                                         <th>Descripción</th>
                                         <th>Precio</th>
                                         <th>Stock</th>
+                                        <th>Stock Mínimo</th>
                                         <th>Foto</th>
                                         <th>Categoria</th>
                                         <th>Marca</th>
@@ -312,11 +318,12 @@ if($_GET[del]!="")
                                     </thead>
                                     <tfoot>
                                     <tr>
-                                        <th>Codigo de Barras</th>
                                         <th>Nombre</th>
+                                        <th>Codigo de Barras</th>
                                         <th>Descripción</th>
                                         <th>Precio</th>
                                         <th>Stock</th>
+                                        <th>Stock Mínimo</th>
                                         <th>Foto</th>
                                         <th>Categoria</th>
                                         <th>Marca</th>
@@ -326,7 +333,7 @@ if($_GET[del]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"SELECT id_producto, foto, descripcion, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
+                                        <?php $q=mysqli_query($con,"SELECT id_producto, foto, descripcion, stock_minimo, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
                                                                     FROM productos P 
                                                                     JOIN categorias C 
@@ -337,12 +344,14 @@ if($_GET[del]!="")
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
-                                                    <td><?php echo $r['codigo_barraP']; ?></td>
                                                      <td><?php echo $r['NombreP']; ?></td>
+                                                     <td><?php echo $r['codigo_barraP']; ?></td>
                                                      <td><?php echo $r['descripcion']; ?></td>
 
                                                      <td>$ <?php echo number_format($r['PrecioP'],2,',','.'); ?></td>
                                                      <td><?php echo number_format($r['StockP'],0,',','.'); ?></td>
+                                                     <td><?php echo number_format($r['stock_minimo'],0,',','.'); ?></td>
+
                                                      
                                                      
                                                      <td>
