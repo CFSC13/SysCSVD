@@ -15,17 +15,9 @@ ini_set('display_errors', '0');
     <meta name="description" content="SysCSVD - Sistema de Gestión">
     <meta name="author" content="ADM">
     <title>SysCSVD - Catalogo de Clientes</title>
-    <style>
-        table, th, td{
-            border: 3px solid black;
-        }
-        body{
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
-    <h1>CATALOGO</h1> 
+    <h1 id="titulo">CATALOGO</h1> 
     <?php
         $showform="";
         $showtable="";
@@ -50,7 +42,6 @@ ini_set('display_errors', '0');
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Descripción</th>
                 <th>Precio</th>
                 <th>Categoria</th>
                 <th>Marca</th>
@@ -61,7 +52,6 @@ ini_set('display_errors', '0');
         <tfoot>
             <tr>
                 <th>Nombre</th>
-                <th>Descripción</th>
                 <th>Precio</th>
                 <th>Categoria</th>
                 <th>Marca</th>
@@ -70,7 +60,7 @@ ini_set('display_errors', '0');
             </tr>
         </tfoot>
         <tbody>
-        <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.descripcion, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
+        <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
                                     FROM productos P 
                                     JOIN categorias C 
@@ -82,7 +72,6 @@ ini_set('display_errors', '0');
                 while($r=mysqli_fetch_array($q)){?>
                     <tr>
                         <td><?php echo $r['NombreP']; ?></td>
-                        <td><?php echo $r['descripcion']; ?></td>
                         <td>$ <?php echo number_format($r['PrecioP'],2,',','.'); ?></td>
                         <td><?php echo $r['NonbreC']; ?></td>
                         <td><?php echo $r['marca']; ?></td>
@@ -100,3 +89,26 @@ ini_set('display_errors', '0');
         </tbody>
     </table>
 </body>
+
+<style>
+    *{
+        font-family: sans-serif;
+        color: #292E49;
+    }
+    table, th, td{
+        border: 1px solid #0052D4;
+        font-size: 12px;
+    }
+    th, td{
+        padding: 1%;
+    }
+    body{
+        text-align: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(#4286f4,#6DD5FA);
+    }
+    #titulo{
+        padding-top:5%;
+    }
+</style>
