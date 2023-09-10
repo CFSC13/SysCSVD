@@ -18,7 +18,7 @@ if($_GET['login']=="ok")
                 $_SESSION['user']=$r['id_usuario'];
                 $_SESSION['nombre']=$r['nombre'];
                 $_SESSION['id_area']=$r['id_area'];
-                echo "<script>window.location='home.php'</script>";
+                echo "<script>window.location='home.php?pagina=inicio'</script>";
             }
                 else
                 {
@@ -82,7 +82,7 @@ if($_GET[logout]=="ok")
                             <div class="col-lg-12">
                                 <div class="p-5">
                                     <div class="text-center">
-                                       <!-- <img src="img/logo_mmtr.png" style="width:70%;"> --> 
+                                        <img src="img/logoSysCSVD.png" alt="Logo" />
                                     </div>
                                     <div class="text-center">
                                         <br>

@@ -28,24 +28,24 @@ error_reporting(E_ERROR | E_PARSE);
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">  
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.php">
-                <div class="sidebar-brand-icon">
-                    <!-- logo del home esquina sup izq -->
-                    <!-- <img src="img/logo_mmtr2.png" width="50%"> -->
-                    
-                </div>
-                <!--<div class="sidebar-brand-text mx-3">Instituto AAA</div>-->
-            </a>
-
+            <div>
+                <a class="sidebar-brand d-flex align-items-center justify-content-center">
+                    <div class="sidebar-brand-icon">
+                        <!-- logo del home esquina sup izq -->
+                        <!-- <img src="img/logo_mmtr2.png" width="50%"> -->
+                        <div> <img src="img/logoSysCSVD.png" width="70%" alt="Logo" /> </div>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">Sistema SysCSVD</div>
+                </a>
+            </div>
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="home.php">
+                <a class="nav-link" href="home.php?pagina=inicio">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Inicio</span></a>
             </li>
@@ -107,7 +107,6 @@ error_reporting(E_ERROR | E_PARSE);
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
