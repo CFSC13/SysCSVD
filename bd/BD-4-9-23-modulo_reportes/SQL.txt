@@ -1,6 +1,7 @@
-insert into grupos_menu (id_grupo, nombre_grupo, icono) values (15, reportes, fa fa-line-chart)
+INSERT INTO grupos_menu (id_grupo, nombre_grupo, icono) VALUES (15, 'reportes', 'fa fa-line-chart');
 
-insert into items_interno (id_item, nombre_item, url, id_grupo) values (19, reportes estadísticos, reportes.php, 15)
+INSERT INTO items_interno (id_item, nombre_item, url, id_grupo) VALUES (19, 'reportes estadísticos', 'reportes.php', 15);
+
 
 
 

@@ -18,111 +18,12 @@ if($_SESSION[user]==0)
                         if($_GET[ver]!=0)
                  
                     ?>
-                        <div id="collapseNuevo" class="collapse <?php echo $showform; ?> m-1" aria-labelledby="headingOne" data-parent="#accordion">    
-                            <div class="card-body" >
-               
-                            <form action="<?php echo $url; ?>" method="POST" enctype="multipart/form-data">
-                                <!--Fila 1-->
-                                <div class="form-group">
-                                    <label for="nombre">Código de Barras</label>
-                                    <input type="text" class="form-control" id="codigo_barra" name="codigo_barra" value="<?php echo $r['codigo_barra']; ?>" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $r['nombre']; ?>" required>
-                                </div>
-                               
-                                <div class="form-group">
-                                    <label for="nombre">Descripción</label>
-                                    <textarea  class="form-control" type="text" name="descripcion" placeholder="descripción"  id="descripcion" rows="2"><?php if(!empty($r['descripcion'])) echo $r['descripcion'];?></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nombre">Precio</label>
-                                    <input type="number" class="form-control" id="precio" name="precio" value="<?php echo $r['precio'];?>" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nombre">Stock</label>
-                                    <input type="number" class="form-control" id="stock" name="stock" value="<?php echo $r['stock']; ?>" required>
-                                </div>
-                                <br>
-                                <div class="form-group">
-                                    <label for="nombre">Stock Mínimo</label>
-                                    <input type="number" class="form-control" id="stock_minimo" name="stock_minimo" value="<?php echo $r['stock_minimo']; ?>" required>
-                                </div>
-                                <br>
-
-                                <div class="form-group">
-                                    <label for="nombre">Foto</label>
-                                    <input type="file" name="foto" id="foto" >
-                                    <input type="hidden" name="foto_actual" id="foto_actual" value="<?php echo $r['foto'];?>">
-                                </div>
-                                <br>
-
-                                <div class="form-group">
-                                    <label for="nombre">Categoría</label>
-                                    <select name="id_categoria" id="id_categoria" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
-                                        <option value="">Seleccione...</option>
-                                        <?php
-                                        $sql_g=mysqli_query($con,"select * from categorias order by nombre");
-                                        if(mysqli_num_rows($sql_g)!=0)
-                                        {
-                                            while($r_g=mysqli_fetch_array($sql_g))
-                                            {// el value es el id_categoria que paso por post al submitir ///////si id_categoria en categoria == id_categoria en productio entonces selecciono //////y muestro nombre de la categoria
-                                                ?>
-                                                <option value="<?php echo $r_g['id_categoria'];?>" <?php if($r_g['id_categoria']==$r['id_categoria']){?> selected <?php }?>><?php echo $r_g['nombre'];?></option>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>  
-                                <br>
-
-                                <div class="form-group">
-                                    <label for="nombre">Marca</label>
-                                    <select name="id_marca" id="id_marca" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
-                                        <option value="">Seleccione...</option>
-                                        <?php
-                                        $sql_g=mysqli_query($con,"select * from marcas order by nombre");
-                                        if(mysqli_num_rows($sql_g)!=0)
-                                        {
-                                            while($r_g=mysqli_fetch_array($sql_g))
-                                            {// el value es el id_categoria que paso por post al submitir ///////si id_categoria en categoria == id_categoria en productio entonces selecciono //////y muestro nombre de la categoria
-                                                ?>
-                                                <option value="<?php echo $r_g['id_marca'];?>" <?php if($r_g['id_marca']==$r['id_marca']){?> selected <?php }?>><?php echo $r_g['nombre'];?></option>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>  
-                                <br>
-                                
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="libreria" name="libreria" <?php if ($r['libreria']) echo 'checked'; ?>>
-                                        <label class="form-check-label" for="libreria">Es de Librería</label>
-                                    </div>
-                                </div>
-
-                            
-                                <input type="hidden" name="id_producto" id="id_producto" value="<?php echo $r['id_producto']; ?>"> 
-                                <button type="submit" class="btn btn-primary" style="float:right;">Guardar</button>
-                            </form>
-                            
-                            </div>
-                        </div>
-                    </div>
-            
-
-           
+                                   
             
          <!-- Page Heading -->
          <div class="card shadow mb-4 mx-auto" >
                         <div class="card-header py-3" id="headingTwo">
-                        <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Productos coon Stock Mínimo</h6>
+                        <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Productos con Stock Mínimo</h6>
                         </div>
                         <div id="collapseListado" class="collapse <?php echo $showtable; ?>" aria-labelledby="headingTwo" data-parent="#accordion">
                             <div class="card-body" >
