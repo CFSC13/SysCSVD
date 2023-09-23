@@ -2,7 +2,8 @@
 function conectar()
 {
 	global $con;
-	$con = mysqli_connect("localhost","root","","SysCSVD");
+	//$con = mysqli_connect("localhost","root","","SysCSVD");
+	$con = mysqli_connect("localhost","root","","syscsvd");
 		/* comprobar la conexión */
 		if (mysqli_connect_errno()) 
 		{

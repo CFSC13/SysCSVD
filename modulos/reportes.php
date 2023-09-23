@@ -1,53 +1,61 @@
+<?php
+ session_start();
+ if($_SESSION[user]==0)
+ {
+     echo "<script>window.location='index.php';</script>";
+ }
+?>
+
+<!---------------------------------GRAFICO BARRAS--------------------------------------->
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<figure class="highcharts-figure">
-    <div id="container"></div>
+<figure class="highcharts-figure-barras">
+    <div id="container_barras"></div>
 
-    <table id="datatable">
+    <table hidden id="datatable-barras">
         <?php
-            $q=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Año, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad))) as Ganancias from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto join detalles_compras c on c.id_producto = d.id_producto group by p.nombre, YEAR(v.fecha_de_venta);") //agrupar datos con GROUP BY por year, month, wekk
-
-            //if(mysqli_num_rows($q)!=0){
-              //  while($r=mysqli_fetch_array($q)){?>
-                <?php if(mysqli_num_rows($q)!=0){ ?>
+            $etiquetas_barras=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from detalle_ventas d join productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                     <thead>
-                        <tr>
-                            <?php  while($r=mysqli_fetch_array($q)){ ?>
+                        <tr> 
                             <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
-                            <th><?php echo $r['Producto'] ?></th> <!--Producto 1-->  
+                            <?php  while($r_etiquetas_barras=mysqli_fetch_array($etiquetas_barras)){ ?>
+                            <th><?php echo $r_etiquetas_barras['Producto']; ?></th> <!--Producto 1--> 
+                            <?php } ?> 
                         </tr>
                     </thead>
+                    <?php $anios_barras=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio,  SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta group by Anio;"); ?>       
                     <tbody>
+                        <?php if(mysqli_num_rows($anios_barras)!=0){ ?>
+                                    <?php  while($r_anios_barras=mysqli_fetch_array($anios_barras)){ ?>
                         <tr>
-                            <th><?php echo $r['Año'] ?></th> <!--Año-->
-                            <td><?php echo $r['Ganancias'] ?></td> <!--ganancia 1 Producto-->
-                                    <?php }; ?>
+                            <th> <?php echo $r_anios_barras['Anio']; ?></th> <!--Año-->
+                            <?php $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto join detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
+                            <?php if(mysqli_num_rows($ganancias_anios_barras)!=0){ ?>
+                                <?php  while($r_ganancias_anios_barras=mysqli_fetch_array($ganancias_anios_barras)){ ?>
+                                    <td> <?php echo $r_ganancias_anios_barras['Ganancias']; ?> </td> 
+                                <?php } ?>
+                            <?php } ?>
                         </tr>
+                        <?php } ?>
+                        <?php } ?>
                     </tbody>
-                <?php }; ?>          
-                <?php //}
-            //}?> 
     </table>
 </figure>
 
 
 <script> 
-Highcharts.chart('container', {
+Highcharts.chart('container_barras', {
     data: {
-        table: 'datatable'
+        table: 'datatable-barras'
     },
     chart: {
         type: 'column'
     },
     title: {
-        text: 'Live births in Norway'
-    },
-    subtitle: {
-        text:
-            'Source: <a href="https://www.ssb.no/en/statbank/table/04231" target="_blank">SSB</a>'
+        text: 'Ganancias por año'
     },
     xAxis: {
         type: 'category'
@@ -55,25 +63,25 @@ Highcharts.chart('container', {
     yAxis: {
         allowDecimals: false,
         title: {
-            text: 'Amount'
+            text: 'Ganancias'
         }
     }
 });
 </script>
 
 <style>
-#container {
+#container_barras {
     height: 400px;
 }
 
-.highcharts-figure,
+.highcharts-figure-barras,
 .highcharts-data-table table {
     min-width: 310px;
     max-width: 800px;
     margin: 1em auto;
 }
 
-#datatable {
+#datatable-barras {
     font-family: Verdana, sans-serif;
     border-collapse: collapse;
     border: 1px solid #ebebeb;
@@ -83,35 +91,153 @@ Highcharts.chart('container', {
     max-width: 500px;
 }
 
-#datatable caption {
+#datatable-barras caption {
     padding: 1em 0;
     font-size: 1.2em;
     color: #555;
 }
 
-#datatable th {
+#datatable-barras th {
     font-weight: 600;
     padding: 0.5em;
 }
 
-#datatable td,
-#datatable th,
-#datatable caption {
+#datatable-barras td,
+#datatable-barras th,
+#datatable-barras caption {
     padding: 0.5em;
 }
 
-#datatable thead tr,
-#datatable tr:nth-child(even) {
+#datatable-barras thead tr,
+#datatable-barras tr:nth-child(even) {
     background: #f8f8f8;
 }
 
-#datatable tr:hover {
+#datatable-barras tr:hover {
     background: #f1f7ff;
 }
 </style>
 
+<!--------------------GRAFICO PIE-------------------------->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+<figure class="highcharts-figure-pie">
+    <div id="container-pie"></div>
 
+    <table id="datatable-pie">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Boys</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>2016</th>
+                <td>30 386</td>
+            </tr>
+            <tr>
+                <th>2017</th>
+                <td>29 173</td>
+            </tr>
+            <tr>
+                <th>2018</th>
+                <td>28 430</td>
+            </tr>
+            <tr>
+                <th>2019</th>
+                <td>28 042</td>
+            </tr>
+            <tr>
+                <th>2020</th>
+                <td>27 063</td>
+            </tr>
+            <tr>
+                <th>2021</th>
+                <td>28 684</td>
+            </tr>
+        </tbody>
+    </table>
+</figure>
+
+<script>
+    Highcharts.chart('container-pie', {
+        data: {
+            table: 'datatable-pie'
+        },
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Live births in Norway'
+        },
+        subtitle: {
+            text:
+                'Source: <a href="https://www.ssb.no/en/statbank/table/04231" target="_blank">SSB</a>'
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                text: 'Amount'
+            }
+        }
+    });
+</script>
+
+<style>
+    #container-pie {
+        height: 400px;
+    }
+
+    .highcharts-figure-pie,
+    .highcharts-data-table table {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
+
+    #datatable-pie {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #ebebeb;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    #datatable-pie caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    #datatable-pie th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
+
+    #datatable-pie td,
+    #datatable-pie th,
+    #datatable-pie caption {
+        padding: 0.5em;
+    }
+
+    #datatable-pie thead tr,
+    #datatable-pie tr:nth-child(even) {
+        background: #f8f8f8;
+    }
+
+    #datatable-pie tr:hover {
+        background: #f1f7ff;
+    }
+</style>
 
 <!------------------------------------------------------------------------------------------>
 <!-- Content Wrapper -->
