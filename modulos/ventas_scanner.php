@@ -388,8 +388,8 @@ $(document).on('select2:open', () => {
 
 function buscarProductoManual(codigo){
   $.ajax({
-    //url: "https://579f-138-186-161-227.ngrok-free.app/syscsvd/buscarAjax.php",
-    url: "http://localhost/syscsvd/buscarAjax.php",
+    url: "https://579f-138-186-161-227.ngrok-free.app/syscsvd/buscarAjax.php",
+    //url: "http://localhost/syscsvd/buscarAjax.php",
     data: { w1: codigo },
     type: "GET",
     //especifica que se recibe en formato JSON y no hace falta usar el parse
