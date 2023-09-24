@@ -252,10 +252,10 @@ if($_GET['del']!="")
                                     </table>
                                 </div>
                                 </fieldset>    
-                                <div class="text-center"> <!-- Agregamos una div con la clase text-center para centrar contenido -->
-                                    <button type="button" onclick="AddProductos()" class="btn btn-primary">Agregar</button>
-                                </div>
-
+                                <p style="width: 100%; text-align: center;" >
+                                    <br>
+                                    <button type="submit" class="btn btn-secondary">Registrar Compra </button>
+                                </p>
                                 </form>
                             </div>
                         </div>
