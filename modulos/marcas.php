@@ -16,7 +16,7 @@ if($_GET[add]=="ok")
     {
         
 
-            $sql=mysqli_query($con,"insert into marcas (nombre) values(lower('$_POST[nombre]'))");
+            $sql=mysqli_query($con,"insert into syscsvd_marcas (nombre) values(lower('$_POST[nombre]'))");
             
             if(!mysqli_error($con))
             {
@@ -41,7 +41,7 @@ if($_GET[mod]=="ok")
     if(($_POST[nombre]!=""))
     {
         
-            $sql=mysqli_query($con,"update marcas set nombre=lower('$_POST[nombre]') where id_marca=$_POST[id_marca]");
+            $sql=mysqli_query($con,"update syscsvd_marcas set nombre=lower('$_POST[nombre]') where id_marca=$_POST[id_marca]");
 
             if(!mysqli_error())
             {
@@ -65,7 +65,7 @@ if($_GET[mod]=="ok")
 if($_GET[del]!="")
 {
 
-        $sql=mysqli_query($con,"delete from marcas where id_marca=$_GET[del]");
+        $sql=mysqli_query($con,"delete from syscsvd_marcas where id_marca=$_GET[del]");
         
         if(!mysqli_error($con))
         {
@@ -96,7 +96,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from marcas where id_marca=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from syscsvd_marcas where id_marca=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -155,7 +155,7 @@ if($_GET[del]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select * from marcas order by nombre"); 
+                                        <?php $q=mysqli_query($con,"select * from syscsvd_marcas order by nombre"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>

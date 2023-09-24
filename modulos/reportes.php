@@ -17,7 +17,7 @@
 
     <table hidden id="datatable-barras">
         <?php
-            $etiquetas_barras=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from detalle_ventas d join productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+            $etiquetas_barras=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                     <thead>
                         <tr> 
                             <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -26,13 +26,13 @@
                             <?php } ?> 
                         </tr>
                     </thead>
-                    <?php $anios_barras=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio,  SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta group by Anio;"); ?>       
+                    <?php $anios_barras=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta group by Anio;"); ?>       
                     <tbody>
                         <?php if(mysqli_num_rows($anios_barras)!=0){ ?>
                                     <?php  while($r_anios_barras=mysqli_fetch_array($anios_barras)){ ?>
                         <tr>
                             <th> <?php echo $r_anios_barras['Anio']; ?></th> <!--Año-->
-                            <?php $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto join detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
+                            <?php $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto join syscsvd_detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
                             <?php if(mysqli_num_rows($ganancias_anios_barras)!=0){ ?>
                                 <?php  while($r_ganancias_anios_barras=mysqli_fetch_array($ganancias_anios_barras)){ ?>
                                     <td> <?php echo $r_ganancias_anios_barras['Ganancias']; ?> </td> 
@@ -256,8 +256,8 @@ Highcharts.chart('container_barras', {
 
     <!-- Content Row -->
     <div class="row">
-        <?php $s=mysqli_query($con,"SELECT * FROM ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE());") ?> 
-        <!--SQL FECHA ACTUAL: SELECT * FROM ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE())-->
+        <?php $s=mysqli_query($con,"SELECT * FROM syscsvd_ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE());") ?> 
+        <!--SQL FECHA ACTUAL: SELECT * FROM syscsvd_ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE())-->
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">

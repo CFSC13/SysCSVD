@@ -34,7 +34,7 @@ if($_GET['add']=="ok")
                     $rp=$_POST['precio'];
                     $subtotal=$rp*$can;
                     
-                    $sql2.="insert into detalle_ventas (id_producto,id_venta,precio_unitario,cantidad,subtotal) values('".$cod."', $r[id], '".$rp."', $can, '$subtotal');";
+                    $sql2.="insert into syscsvd_detalle_ventas (id_producto,id_venta,precio_unitario,cantidad,subtotal) values('".$cod."', $r[id], '".$rp."', $can, '$subtotal');";
                     //echo "<hr><h1>".$n.")-".$sql2."</h1>";
                     //se actualiza el stock
                     $sql_update = "UPDATE productos SET stock = stock + $can WHERE id_producto = $cod";

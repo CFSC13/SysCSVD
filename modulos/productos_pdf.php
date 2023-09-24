@@ -40,7 +40,7 @@ if(mysqli_num_rows($sql_marcas)!=0)
 } 
 
 //saco los rubros
-$sql_rubros=mysqli_query($con,"select *from categorias order by nombre"); 
+$sql_rubros=mysqli_query($con,"select *from syscsvd_categorias order by nombre"); 
 if(mysqli_num_rows($sql_rubros)!=0)
 {
     //logo de la empresa
@@ -76,7 +76,7 @@ if(mysqli_num_rows($sql_rubros)!=0)
 
 //listado
 $cuerpo="";
-$q=mysqli_query($con,"select p.*, m.nombre as marca, c.nombre as categoria, (select url from fotos_productos where id_producto=p.id order by orden limit 1) as foto from productos p, marcas m, categorias c where p.id_marca=m.id and p.activo='si' and p.id_categoria=c.id order by p.orden"); 
+$q=mysqli_query($con,"select p.*, m.nombre as marca, c.nombre as categoria, (select url from fotos_productos where id_producto=p.id order by orden limit 1) as foto from productos p, marcas m, syscsvd_categorias c where p.id_marca=m.id and p.activo='si' and p.id_categoria=c.id order by p.orden"); 
 if(mysqli_num_rows($q)!=0)
 {
     $cuerpo.='<table width="100%">';

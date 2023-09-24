@@ -12,7 +12,7 @@ if($_GET[mod]=="ok")
     if(($_POST['clave_actual']!=$_POST['clave_nueva']) && !empty($_POST['clave_nueva']))
     {
                     
-            $sql=mysqli_query($con,"update usuarios set clave='$_POST[clave_nueva]' where id_usuario=$_POST[id]");
+            $sql=mysqli_query($con,"update syscsvd_usuarios set clave='$_POST[clave_nueva]' where id_usuario=$_POST[id]");
 
             if(!mysqli_error())
             {
@@ -44,7 +44,7 @@ if($_GET[mod]=="ok")
        
        <?php
                 $showform="show";
-                $sql=mysqli_query($con,"select *from usuarios where id_usuario=$_SESSION[user]");
+                $sql=mysqli_query($con,"select *from syscsvd_usuarios where id_usuario=$_SESSION[user]");
                 if(mysqli_num_rows($sql)!=0)
                 {   
                     $r=mysqli_fetch_array($sql);
