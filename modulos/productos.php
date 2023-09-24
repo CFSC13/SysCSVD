@@ -359,7 +359,8 @@ if($_GET[del]!="")
                                                             if(file_exists("fotos/".$r['foto']) && !empty($r['foto']))
                                                             {
                                                                 ?>
-                                                                <img src="fotos/<?php echo $r['foto'];?>" width="50">
+                                                                <a href="fotos/<?php echo $r['foto'];?>" target="_blank"><img src="fotos/<?php echo $r['foto'];?>" width="100"></a>
+                                                                
                                                                 <?php
                                                             }
                                                             ?>
@@ -439,8 +440,20 @@ $(document).ready( function () {
     $('#dataTable-mensajes').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
+        {
+            extend: 'excel',
+            text: 'Exportar a Excel'
+        },
+        {
+            extend: 'pdf',
+            text: 'Exportar a PDF',
+            orientation: 'landscape' // Configura la orientación a paisaje
+        },
+        {
+            extend: 'print',
+            text: 'Imprimir',
+        }
+    ],
         sort: true, 
         order : [[0,"desc"]],
         responsive: true,

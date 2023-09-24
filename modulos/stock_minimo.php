@@ -148,8 +148,19 @@ $(document).ready( function () {
     $('#dataTable-mensajes').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
+        {
+            extend: 'excel',
+            text: 'Exportar a Excel'
+        },
+        {
+            extend: 'pdf',
+            text: 'Exportar a PDF',
+        },
+        {
+            extend: 'print',
+            text: 'Imprimir',
+        }
+    ],
         sort: true, 
         order : [[0,"desc"]],
         responsive: true,
