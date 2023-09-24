@@ -16,13 +16,13 @@ if($_GET['add']=="ok")
     if($_POST['cod_prod']!="" && $_POST['can_prod']!="")
     {
        // echo "insert into facturacion (fecha, id_cliente, id_forma_pago, fecha_vencimiento,cerrado,total) values(now(), $_POST['clientes'], $_POST['condicion_venta'], '$_POST[fecha_vencimiento]', 0, '$_POST[total]') RETURNING *;";
-        $sql=mysqli_query($con,"insert into ventas (fecha_de_venta, importe_total, id_usuario) values(now(), '$_POST[total]',  $_POST[id_usuario])");
+        $sql=mysqli_query($con,"insert into syscsvd_ventas (fecha_de_venta, importe_total, id_usuario) values(now(), '$_POST[total]',  $_POST[id_usuario])");
         //echo "'$_POST[total]', '$_POST[cod_prod]', now(), '$_POST[id_usuario]'";
         
 
         if(!mysqli_error($con))
         {
-            $r=mysqli_fetch_array(mysqli_query($con,"select MAX(id_venta) as id from ventas"));
+            $r=mysqli_fetch_array(mysqli_query($con,"select MAX(id_venta) as id from syscsvd_ventas"));
             $cant_articulos=count($_POST['cod_prod']);
             $n=0;
             $error=0;
@@ -34,13 +34,13 @@ if($_GET['add']=="ok")
                 if($_POST['cod_prod'][$n]!="" && $_POST['can_prod'][$n]){
                     $cod=$_POST['cod_prod'][$n];
                     $can=$_POST['can_prod'][$n];
-                    $rp=mysqli_fetch_array(mysqli_query($con,"select precio from productos where id_producto='$cod'"));
+                    $rp=mysqli_fetch_array(mysqli_query($con,"select precio from syscsvd_productos where id_producto='$cod'"));
                     //echo "$rp";
                     $subtotal=$rp['precio']*$can;
-                    $sql2.="insert into detalle_ventas (id_producto,id_venta,precio_unitario,cantidad,subtotal) values('".$cod."', $r[id], $rp[precio], $can, '$subtotal');";
+                    $sql2.="insert into syscsvd_detalle_ventas (id_producto,id_venta,precio_unitario,cantidad,subtotal) values('".$cod."', $r[id], $rp[precio], $can, '$subtotal');";
                     //echo "<hr><h1>".$n.")-".$sql2."</h1>";
                     //se actualiza el stock
-                    $sql_update = "UPDATE productos SET stock = stock - $can WHERE id_producto = $cod";
+                    $sql_update = "UPDATE syscsvd_productos SET stock = stock - $can WHERE id_producto = $cod";
                     mysqli_query($con, $sql_update);
                 }
                 $n++;
@@ -168,7 +168,7 @@ if($_GET['del']!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from ventas where id_venta=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from syscsvd_ventas where id_venta=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -202,7 +202,7 @@ if($_GET['del']!="")
                                     " aria-describedby="basic-addon2" style="margin-right: 1%; width: 100%;" onchange="buscarProductoManual(this.value)">
                                         <option value="">Seleccione...</option>
                                         <?php
-                                        $sql_g=mysqli_query($con,"select * from productos");
+                                        $sql_g=mysqli_query($con,"select * from syscsvd_productos");
                                         if(mysqli_num_rows($sql_g)!=0)
                                         {
                                             while($r_g=mysqli_fetch_array($sql_g))

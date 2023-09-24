@@ -59,10 +59,10 @@ if($_SESSION[user]==0)
                                     <tbody>
                                         <?php $q = mysqli_query($con, "SELECT id_producto, foto, descripcion, stock_minimo, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
-                                    FROM productos P 
-                                    JOIN categorias C 
+                                    FROM syscsvd_productos P 
+                                    JOIN syscsvd_categorias C 
                                     ON P.id_categoria = C.id_categoria
-                                    JOIN marcas M 
+                                    JOIN syscsvd_marcas M 
                                     ON P.id_marca = M.id_marca
                                     WHERE P.stock <= P.stock_minimo
                                     ORDER BY P.nombre;");

@@ -10,7 +10,7 @@ if($_GET['login']=="ok")
 {
     if(($_POST['usuario']!="")&&($_POST['clave']!=""))
     {
-        $sql=mysqli_query($con, "select *from usuarios where usuario='".addslashes($_POST['usuario'])."' and clave='".addslashes($_POST['clave'])."'");
+        $sql=mysqli_query($con, "select *from syscsvd_usuarios where usuario='".addslashes($_POST['usuario'])."' and clave='".addslashes($_POST['clave'])."'");
     
             if(mysqli_num_rows($sql)!=0)
             {   
