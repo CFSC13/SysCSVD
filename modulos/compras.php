@@ -224,12 +224,10 @@ if($_GET['del']!="")
                                     <label for="Cantidad">Precio de Compra</label>
                                     <input type="number" class="form-control" id="precio_compra" name="precio_compra" value="" >
                                
-                                </div>
-                                <div class="form-group">
-                                    <label for="fecha_compra">Fecha de Compra</label>
-                                    <input type="date" class="form-control" id="fecha_compra" name="fecha_compra" value="" required>
-                               
-                                </div>
+                                    <div class="form-group">
+                                        <label for="fecha_compra">Fecha de Compra</label>
+                                        <input type="date" class="form-control" id="fecha_compra" name="fecha_compra" required>
+                                    </div>
                                 <br>
                                 
                                 <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['user']; ?>">
@@ -254,84 +252,27 @@ if($_GET['del']!="")
                                     </table>
                                 </div>
                                 </fieldset>    
-                                <p style="width: 100%; text-align: center;">
-                                    <br>
-                                    <button type="submit" class="btn btn-secondary">Registrar Compra </button>
-                                </p>
+                                <div class="text-center"> <!-- Agregamos una div con la clase text-center para centrar contenido -->
+                                    <button type="button" onclick="AddProductos()" class="btn btn-primary">Agregar</button>
+                                </div>
+
                                 </form>
                             </div>
                         </div>
                     </div>
             
 
-           
-            
-                     <!-- Page Heading -->
-                    <div class="card shadow mb-4 mx-auto" >
-                        <div class="card-header py-3" id="headingTwo">
-                        <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Últimas 10 Facturaciones</h6>
-                        </div>
-                        <div id="collapseListado" class="collapse <?php echo $showtable; ?>" aria-labelledby="headingTwo" data-parent="#accordion">
-                            <div class="card-body" >
-                             <div class="table-responsive" style="padding-right: 1% !important;">
-                                    <table class="table table-striped table-bordered display nowrap" id="dataTable-mensajes" width="100%" cellspacing="0">
-                                    <thead>
-                                    <tr>
-                                        <th>Cod.</th>
-                                        <th>Cliente</th>
-                                        <th>Fecha</th>
-                                        <th>Forma de Pago</th>
-                                        <th>% Descuento</th>
-                                        <th>Total</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                    </thead>
-                                    <tfoot>
-                                    <tr>
-                                       <th>Cod.</th>
-                                        <th>Cliente</th>                                        
-                                        <th>Fecha</th>
-                                        <th>Forma de Pago</th>
-                                        <th>% Descuento</th>
-                                        <th>Total</th>                                        
-                                        <th>Opciones</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <?php 
-                                        //saco los últimos 10 registros
-                                        //uso  distinc para que traiga solo una fila
-                                        $q=mysqli_query($con,"SELECT DISTINCT f.id_factura, c.nombre as cliente, f.importe_total, f.fecha_de_emision, c.id_cliente, cv.nombre as forma_pago, df.descuento FROM cliente c JOIN factura f on c.id_cliente=f.id_cliente JOIN detalle_factura df on f.id_factura=df.id_factura JOIN condicion_venta cv on f.id_condicion_venta=cv.id_condicion_venta GROUP by f.id_factura;"); 
-                                            if(mysqli_num_rows($q)!=0){
-                                                while($r=mysqli_fetch_array($q)){?>
-                                                 <tr>
-                                                    <td><?php echo $r['id_factura']; ?></td>
-                                                    <td style="text-transform: capitalize;"><?php echo $r['cliente']; ?></td>
-                                                    <td><?php echo date('d/m/Y', strtotime($r['fecha_de_emision'])); ?></td>
-                                                    <td><?php echo $r['forma_pago']; ?></td>
-                                                    <td><?php echo $r['descuento']; ?></td>
-                                                    <td>$<?php echo number_format(($r['importe_total']-(($r['descuento']*$r['total'])/100)),2,',','.'); ?></td>
-                                                    <td>
-                                                        <a href="presupuesto_pdf.php?id=<?php echo $r['id_factura'] ?>"  class="btn btn-primary" target="_blank" title="Ver PDF" alt="Ver PDF">
-                                                            <i class="fas fa-file-pdf"></i> Ver PDF
-                                                        </a>
-                                                        <a href="javascript:if(confirm('¿Seguro desea elminar la factura?')){ window.location='home.php?pagina=facturacion&del=<?php echo $r['id_factura'] ?>'; }" class="btn btn-danger" title="Eliminar" alt="Eliminar">
-                                                            <i class="fas fa-eraser"></i> Eliminar
-                                                        </a>
-                                                    </td>
-                                                 </tr>       
-                                             <?php }
-                                             }?>  
-                                              
-                                    </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
     </div>  
+
+
+    <script>
+    // Obtén la fecha actual en formato ISO (AAAA-MM-DD)
+    var fechaActual = new Date().toISOString().split('T')[0];
+    
+    // Establece la fecha actual como valor predeterminado
+    document.getElementById("fecha_compra").value = fechaActual;
+</script>
 
 <script type="text/javascript">
     var total=0;
