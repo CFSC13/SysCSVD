@@ -5,7 +5,7 @@
      echo "<script>window.location='index.php';</script>";
  }
 ?>
-
+ 
 <!---------------------------------GRAFICO BARRAS--------------------------------------->
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
@@ -19,7 +19,7 @@
 
             <table id="datatable-barras">
                 <?php
-                    $etiquetas_barras=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from detalle_ventas d join productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_barras=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -28,13 +28,13 @@
                                     <?php } ?> 
                                 </tr>
                             </thead>
-                            <?php $anios_barras=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio,  SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta group by Anio;"); ?>       
+                            <?php $anios_barras=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta group by Anio;"); ?>       
                             <tbody>
                                 <?php if(mysqli_num_rows($anios_barras)!=0){ ?>
                                             <?php  while($r_anios_barras=mysqli_fetch_array($anios_barras)){ ?>
                                 <tr>
                                     <th> <?php echo $r_anios_barras['Anio']; ?></th> <!--Año-->
-                                    <?php $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto join detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
+                                    <?php $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto join syscsvd_detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
                                     <?php if(mysqli_num_rows($ganancias_anios_barras)!=0){ ?>
                                         <?php  while($r_ganancias_anios_barras=mysqli_fetch_array($ganancias_anios_barras)){ ?>
                                             <td> <?php echo $r_ganancias_anios_barras['Ganancias']; ?> </td> 
@@ -127,7 +127,7 @@
             <div id="container-pie"></div>
 
             <table id="datatable-pie">
-                <?php $etiqueta_mes_actual_pie=mysqli_query($con,"SELECT MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta) = MONTH(CURRENT_DATE());");?>
+                <?php $etiqueta_mes_actual_pie=mysqli_query($con,"SELECT MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta) = MONTH(CURRENT_DATE());");?>
                 <thead>
                     <tr>
                         <th></th>
@@ -136,12 +136,12 @@
                         <?php } ?> 
                     </tr>
                 </thead>
-                <?php $etiqueta_producto_pie=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from detalle_ventas d join productos p on d.id_producto = p.id_producto group by p.nombre;");?>
+                <?php $etiqueta_producto_pie=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;");?>
                 <tbody>
                     <?php if(mysqli_num_rows($etiqueta_producto_pie)!=0){ ?>
                                                 <?php  while($r_etiqueta_producto_pie=mysqli_fetch_array($etiqueta_producto_pie)){ ?>
 
-                                                    <?php $cantidad_ventasmes_pie=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto where p.nombre='".$r_etiqueta_producto_pie['Producto']."' group by p.nombre;"); ?>
+                                                    <?php $cantidad_ventasmes_pie=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where p.nombre='".$r_etiqueta_producto_pie['Producto']."' group by p.nombre;"); ?>
 
         <?php if(mysqli_num_rows($cantidad_ventasmes_pie)!=0){ ?>
             <?php  while($r_cantidad_ventasmes_pie=mysqli_fetch_array($cantidad_ventasmes_pie)){ ?>
@@ -232,7 +232,7 @@
 
             <table id="datatable-area">
                 <?php
-                    $etiquetas_area=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from detalle_ventas d join productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_area=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -241,13 +241,13 @@
                                     <?php } ?> 
                                 </tr>
                             </thead>
-                            <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
+                            <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
                             <tbody>
                                 <?php if(mysqli_num_rows($mes_area)!=0){ ?>
                                             <?php  while($r_mes_area=mysqli_fetch_array($mes_area)){ ?>
                                 <tr>
                                     <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
-                                    <?php $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
+                                    <?php $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
                                     <?php if(mysqli_num_rows($ventas_mes_area)!=0){ ?>
                                         <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area)){ ?>
                                             <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
@@ -341,7 +341,7 @@
 
             <table id="datatable-line">
                 <?php
-                    $etiquetas_area=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from detalle_ventas d join productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_area=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -350,13 +350,13 @@
                                     <?php } ?> 
                                 </tr>
                             </thead>
-                            <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
+                            <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
                             <tbody>
                                 <?php if(mysqli_num_rows($mes_area)!=0){ ?>
                                             <?php  while($r_mes_area=mysqli_fetch_array($mes_area)){ ?>
                                 <tr>
                                     <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
-                                    <?php $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from ventas v join detalle_ventas d on v.id_venta = d.id_venta join productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
+                                    <?php $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
                                     <?php if(mysqli_num_rows($ventas_mes_area)!=0){ ?>
                                         <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area)){ ?>
                                             <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
