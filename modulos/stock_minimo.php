@@ -59,10 +59,10 @@ if($_SESSION[user]==0)
                                     <tbody>
                                         <?php $q = mysqli_query($con, "SELECT id_producto, foto, descripcion, stock_minimo, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
-                                    FROM productos P 
-                                    JOIN categorias C 
+                                    FROM syscsvd_productos P 
+                                    JOIN syscsvd_categorias C 
                                     ON P.id_categoria = C.id_categoria
-                                    JOIN marcas M 
+                                    JOIN syscsvd_marcas M 
                                     ON P.id_marca = M.id_marca
                                     WHERE P.stock <= P.stock_minimo
                                     ORDER BY P.nombre;");
@@ -133,10 +133,34 @@ if($_SESSION[user]==0)
     //fin editor
 </script>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
 <script>
 $(document).ready( function () {
     //inicio datatable
     $('#dataTable-mensajes').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+        {
+            extend: 'excel',
+            text: 'Exportar a Excel'
+        },
+        {
+            extend: 'pdf',
+            text: 'Exportar a PDF',
+        },
+        {
+            extend: 'print',
+            text: 'Imprimir',
+        }
+    ],
         sort: true, 
         order : [[0,"desc"]],
         responsive: true,

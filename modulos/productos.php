@@ -50,7 +50,7 @@ if($_GET['add']=="ok")
              }
              
        
-         $sql = mysqli_query($con, "INSERT INTO productos (codigo_barra, nombre, descripcion, libreria, precio, stock, stock_minimo, foto, id_categoria, id_marca)
+         $sql = mysqli_query($con, "INSERT INTO syscsvd_productos (codigo_barra, nombre, descripcion, libreria, precio, stock, stock_minimo, foto, id_categoria, id_marca)
          VALUES ('$_POST[codigo_barra]', lower('$_POST[nombre]'), '$_POST[descripcion]', '$esDeLibreria', '$_POST[precio]', '$_POST[stock]', '$_POST[stock_minimo]', '$archivo', $_POST[id_categoria], $_POST[id_marca])");
 
          echo mysqli_error($con);
@@ -107,7 +107,7 @@ if ($_GET['mod'] == "ok") {
                 $esDeLibreria=0;
              }
         // Construir la consulta SQL
-        $sql = "UPDATE productos SET codigo_barra='" . $_POST['codigo_barra'] . "', nombre=lower('" . $_POST['nombre'] . "'), descripcion='" . $_POST['descripcion'] . "', libreria='" . $esDeLibreria. "', precio='" . $_POST['precio'] . "', stock='" . $_POST['stock'] . "', stock_minimo='" . $_POST['stock_minimo'] . "', id_categoria='" . $_POST['id_categoria'] ."', id_marca='" . $_POST['id_marca'] . "'";
+        $sql = "UPDATE syscsvd_productos SET codigo_barra='" . $_POST['codigo_barra'] . "', nombre=lower('" . $_POST['nombre'] . "'), descripcion='" . $_POST['descripcion'] . "', libreria='" . $esDeLibreria. "', precio='" . $_POST['precio'] . "', stock='" . $_POST['stock'] . "', stock_minimo='" . $_POST['stock_minimo'] . "', id_categoria='" . $_POST['id_categoria'] ."', id_marca='" . $_POST['id_marca'] . "'";
         
         if (!empty($archivo)) {
             $sql .= ", " . $archivo;
@@ -137,13 +137,13 @@ if($_GET[del]!="")
 {
     echo $_GET[del];
     //se elimina foto  
-    $sql_foto="select foto from productos where id_producto=".$_GET['del'];
+    $sql_foto="select foto from syscsvd_productos where id_producto=".$_GET['del'];
 	$r_foto=mysqli_fetch_array(mysqli_query($con, $sql_foto));
 	copy('fotos/'.$r_foto['foto'], 'fotos_anuladas/'.$_GET['del'].'_'.$r_foto['foto']);//copiar
 	unlink('fotos/'.$r_foto['foto']);//eliminar
 
 	//elimino el registro
-	$sql="delete from productos where id_producto=".$_GET['del'];
+	$sql="delete from syscsvd_productos where id_producto=".$_GET['del'];
 	$resultado=mysqli_query($con,$sql);
 	if(!mysqli_error($con))
 
@@ -175,7 +175,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from productos where id_producto=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from syscsvd_productos where id_producto=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -236,7 +236,7 @@ if($_GET[del]!="")
                                     <select name="id_categoria" id="id_categoria" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
                                         <option value="">Seleccione...</option>
                                         <?php
-                                        $sql_g=mysqli_query($con,"select * from categorias order by nombre");
+                                        $sql_g=mysqli_query($con,"select * from syscsvd_categorias order by nombre");
                                         if(mysqli_num_rows($sql_g)!=0)
                                         {
                                             while($r_g=mysqli_fetch_array($sql_g))
@@ -256,7 +256,7 @@ if($_GET[del]!="")
                                     <select name="id_marca" id="id_marca" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
                                         <option value="">Seleccione...</option>
                                         <?php
-                                        $sql_g=mysqli_query($con,"select * from marcas order by nombre");
+                                        $sql_g=mysqli_query($con,"select * from syscsvd_marcas order by nombre");
                                         if(mysqli_num_rows($sql_g)!=0)
                                         {
                                             while($r_g=mysqli_fetch_array($sql_g))
@@ -335,10 +335,10 @@ if($_GET[del]!="")
                                     <tbody>
                                         <?php $q=mysqli_query($con,"SELECT id_producto, foto, descripcion, stock_minimo, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
-                                                                    FROM productos P 
-                                                                    JOIN categorias C 
+                                                                    FROM syscsvd_productos P 
+                                                                    JOIN syscsvd_categorias C 
                                                                     ON P.id_categoria = C.id_categoria
-                                                                    JOIN marcas M 
+                                                                    JOIN syscsvd_marcas M 
                                                                     ON P.id_marca = M.id_marca
                                                                     order by P.nombre;"); 
                                             if(mysqli_num_rows($q)!=0){
@@ -359,7 +359,8 @@ if($_GET[del]!="")
                                                             if(file_exists("fotos/".$r['foto']) && !empty($r['foto']))
                                                             {
                                                                 ?>
-                                                                <img src="fotos/<?php echo $r['foto'];?>" width="50">
+                                                                <a href="fotos/<?php echo $r['foto'];?>" target="_blank"><img src="fotos/<?php echo $r['foto'];?>" width="100"></a>
+                                                                
                                                                 <?php
                                                             }
                                                             ?>
@@ -424,10 +425,35 @@ if($_GET[del]!="")
     //fin editor
 </script>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+ <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script>
 $(document).ready( function () {
+    
     //inicio datatable
     $('#dataTable-mensajes').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+        {
+            extend: 'excel',
+            text: 'Exportar a Excel'
+        },
+        {
+            extend: 'pdf',
+            text: 'Exportar a PDF',
+            orientation: 'landscape' // Configura la orientación a paisaje
+        },
+        {
+            extend: 'print',
+            text: 'Imprimir',
+        }
+    ],
         sort: true, 
         order : [[0,"desc"]],
         responsive: true,
@@ -455,6 +481,9 @@ $(document).ready( function () {
 
     //inicializar datatable
     $('#dataTable-mensajes').DataTable();
+    
+    
+
 } );    
 
 

@@ -19,7 +19,7 @@ if($_GET[id]!="")
         {
             if($_POST[item]!="")
             {
-                $sql=mysqli_query($con,"insert into items_x_usuario (id_item,id_usuario) values($_POST[item],$_GET[id])");
+                $sql=mysqli_query($con,"insert into syscsvd_items_x_usuario (id_item,id_usuario) values($_POST[item],$_GET[id])");
                 
             }
             echo "<script>window.location='items_x_usuarios.php?id=".$_GET[id]."'</script>";
@@ -27,7 +27,7 @@ if($_GET[id]!="")
         
         if($_GET[del]=="ok")
         {
-            $sql=mysqli_query($con,"delete from items_x_usuario where id_item=$_GET[item] and id_usuario=$_GET[id]");
+            $sql=mysqli_query($con,"delete from syscsvd_items_x_usuario where id_item=$_GET[item] and id_usuario=$_GET[id]");
         
             echo "<script>window.location='items_x_usuarios.php?id=".$_GET[id]."'</script>";
         }
@@ -75,7 +75,7 @@ if($_GET[id]!="")
                      <!-- Page Heading -->
                         <div class="card shadow mb-4" id="headingOne">
                             <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseNuevo" aria-expanded="false" aria-controls="collapseNuevo">Nuevo Registro Usuario: <?php echo datos_complejos1($con, "usuarios","nombre","id_usuario",$_GET['id']); ?></h6>
+                            <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseNuevo" aria-expanded="false" aria-controls="collapseNuevo">Nuevo Registro Usuario: <?php echo datos_complejos1($con, "syscsvd_usuarios","nombre","id_usuario",$_GET['id']); ?></h6>
                             </div>
                
                <?php
@@ -93,7 +93,7 @@ if($_GET[id]!="")
                                                 <select id="item" class="form-control" name="item" required>
                                                     <option value="">Seleccione...</option>
                                                     <?php
-                                                    $sql_in=mysqli_query($con,"SELECT * FROM items_interno ii, grupos_menu gm WHERE gm.id_grupo=ii.id_grupo and ii.id_item NOT IN (SELECT i.id_item FROM items_interno i, items_x_usuario iu, usuarios u WHERE iu.id_item=i.id_item AND iu.id_usuario=u.id_usuario AND u.id_usuario=".$_GET[id].") ORDER BY nombre_item");
+                                                    $sql_in=mysqli_query($con,"SELECT * FROM syscsvd_items_interno ii, syscsvd_grupos_menu gm WHERE gm.id_grupo=ii.id_grupo and ii.id_item NOT IN (SELECT i.id_item FROM syscsvd_items_interno i, syscsvd_items_x_usuario iu, syscsvd_usuarios u WHERE iu.id_item=i.id_item AND iu.id_usuario=u.id_usuario AND u.id_usuario=".$_GET[id].") ORDER BY nombre_item");
                                                     if(mysqli_num_rows($sql_in)>0)
                                                     {
                                                         while($r_in=mysqli_fetch_array($sql_in))
@@ -144,12 +144,12 @@ if($_GET[id]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select i.* from items_interno i, items_x_usuario iu, usuarios u where iu.id_item=i.id_item and iu.id_usuario=u.id_usuario and u.id_usuario=".$_GET[id]); 
+                                        <?php $q=mysqli_query($con,"select i.* from syscsvd_items_interno i, syscsvd_items_x_usuario iu, syscsvd_usuarios u where iu.id_item=i.id_item and iu.id_usuario=u.id_usuario and u.id_usuario=".$_GET[id]); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
                                                      <td><?php echo $r['nombre_item']; ?></td>
-                                                     <td><?php echo datos_complejos1($con, "grupos_menu","nombre_grupo","id_grupo",$r['id_grupo']); ?></td>
+                                                     <td><?php echo datos_complejos1($con, "syscsvd_grupos_menu","nombre_grupo","id_grupo",$r['id_grupo']); ?></td>
                                                      <td>
                                                         <a href="javascript:if(confirm('Esta Seguro?')){ window.location='items_x_usuarios.php?del=ok&id=<?php echo $_GET[id]?>&item=<?php echo $r[id_item];?>'; }" title="Eliminar" alt="Eliminar"><i class="fas fa-eraser"></i></a></td>
                                                  </tr>       

@@ -94,7 +94,7 @@ if(strlen($_POST['cadena'])<4)//controlo la cantidad mínima de caracteres antes
                 </div>
                 <!--Fin Clientes-->
                 <!-- Inicio Productos -->
-                <?php $q=mysqli_query($con,"select p.*, m.nombre as marca, m.logo, (select url from fotos_productos where id_producto=p.id order by orden limit 1) as foto from productos p, marcas m where (p.nombre like '%".$_POST['cadena']."%' or p.codigo like '%".$_POST['cadena']."%') and p.id_marca=m.id and p.activo='si'");?>
+                <?php $q=mysqli_query($con,"select p.*, m.nombre as marca, m.logo, (select url from fotos_productos where id_producto=p.id order by orden limit 1) as foto from productos p, syscsvd_marcas m where (p.nombre like '%".$_POST['cadena']."%' or p.codigo like '%".$_POST['cadena']."%') and p.id_marca=m.id and p.activo='si'");?>
                 <div class="card shadow mb-4 mx-auto" >
                     <div class="card-header py-3" id="headingTwo">
                     <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado_productos" aria-expanded="true" aria-controls="collapseListado_productos">Productos (<?php echo mysqli_num_rows($q);?>)</h6>

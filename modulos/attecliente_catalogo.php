@@ -12,7 +12,7 @@ if($_SESSION[user]==0)
         $showtable="";
         if($_GET[ver]!=0)
         {
-            $sql=mysqli_query($con,"select *from productos where id_producto=$_GET[ver]");
+            $sql=mysqli_query($con,"select *from syscsvd_productos where id_producto=$_GET[ver]");
                 if(mysqli_num_rows($sql)!=0)
                 {   
                     $r=mysqli_fetch_array($sql);
@@ -68,10 +68,10 @@ if($_SESSION[user]==0)
                                     <tbody>
                                         <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.descripcion, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
-                                                                    FROM productos P 
-                                                                    JOIN categorias C 
+                                                                    FROM syscsvd_productos P 
+                                                                    JOIN syscsvd_categorias C 
                                                                     ON P.id_categoria = C.id_categoria
-                                                                    JOIN marcas M 
+                                                                    JOIN syscsvd_marcas M 
                                                                     ON P.id_marca = M.id_marca
                                                                     order by P.nombre;");  
                                             if(mysqli_num_rows($q)!=0){
