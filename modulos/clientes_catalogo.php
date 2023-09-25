@@ -17,7 +17,7 @@ ini_set('display_errors', '0');
     <title>SysCSVD - Catalogo de Clientes</title>
 </head>
 <body>
-    <h1 id="titulo">CATALOGO</h1> 
+    <h1 id="titulo">Catálogo</h1> 
     <?php
         $showform="";
         $showtable="";
@@ -96,19 +96,30 @@ ini_set('display_errors', '0');
         color: #292E49;
     }
     table, th, td{
-        border: 1px solid #0052D4;
         font-size: 12px;
     }
     th, td{
         padding: 1%;
     }
+    td{
+        background: #D6EAF8 ;
+        font-weight: bold;
+    }
+    th{
+        background: linear-gradient(#4286f4,#6DD5FA);
+        border-radius: 5px; 
+        color: #E5E7E9 ;
+    }
     body{
         text-align: center;
         align-items: center;
         min-height: 100vh;
-        background: linear-gradient(#4286f4,#6DD5FA);
+        background: #EAEDED ;
     }
     #titulo{
-        padding-top:5%;
+        font-family: arial;
+        padding-top:2%;
+        padding-bottom:1%;
+        border-bottom: 1px solid #CCD1D1 ;
     }
 </style>
