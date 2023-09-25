@@ -1,4 +1,5 @@
 RENAME TABLE areas TO syscsvd_areas;
+RENAME TABLE compras TO syscsvd_compras;
 RENAME TABLE categorias TO syscsvd_categorias;
 RENAME TABLE detalles_compras TO syscsvd_detalles_compras;
 RENAME TABLE detalle_ventas TO syscsvd_detalle_ventas;
