@@ -388,7 +388,7 @@ $(document).on('select2:open', () => {
 
 function buscarProductoManual(codigo){
   $.ajax({
-    url: "https://579f-138-186-161-227.ngrok-free.app/syscsvd/buscarAjax.php",
+    url: "buscarAjax.php",
     //url: "http://localhost/syscsvd/buscarAjax.php",
     data: { w1: codigo },
     type: "GET",
