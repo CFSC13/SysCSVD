@@ -12,14 +12,140 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+<!------------------------------------------------------------------------------------------>
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+    <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 id="titulo" class="h3 mb-0 text-gray-800">Informes</h1>
+    </div>
+
+    <style>
+        #titulo{
+            font-size: 35px;
+            float: left;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+
+    <!-- Content Row -->
+    <div class="row">
+        <?php $s=mysqli_query($con,"SELECT * FROM syscsvd_ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE());") ?> 
+        <!--SQL FECHA ACTUAL: SELECT * FROM syscsvd_ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE())-->
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Ventas del Mes</div>
+
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo mysqli_num_rows($s) ?></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   <!--UTILIZAR ESTE GRAFICO-->
+
+        
+        <!-- Ganacias del mes actual -->
+        <?php 
+            $precio_venta= mysqli_query($con,"SELECT sum(d.subtotal) as SubtotalVentas from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta WHERE YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)  = MONTH(CURRENT_DATE());"); 
+            $r_precio_venta=mysqli_fetch_array($precio_venta);
+
+            $precio_compra= mysqli_query($con,"SELECT sum(d.subtotal) as SubtotalCompras from syscsvd_compras c join syscsvd_detalles_compras d on c.id_compra = d.id_compra WHERE YEAR(c.fecha_compra) = YEAR(CURRENT_DATE()) AND MONTH(c.fecha_compra)  = MONTH(CURRENT_DATE());");
+            $r_precio_compra=mysqli_fetch_array($precio_compra);
+
+            $ganancia_mes= $r_precio_venta['SubtotalVentas'] - $r_precio_compra['SubtotalCompras'];
+        ?>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Ganacias del mes actual</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">$<?php echo $ganancia_mes; ?></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Productos en Inventario -->
+        <?php
+            $cantidad_productos= mysqli_query($con,"SELECT count(id_producto) as CantidadProductos from syscsvd_productos;");
+            $r_cantidad_productos=mysqli_fetch_array($cantidad_productos);
+        ?>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Productos en Inventario
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $r_cantidad_productos['CantidadProductos']; ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Productos de libreria en inventario -->
+        <?php
+            $cantidad_productos_libreria= mysqli_query($con,"SELECT count(id_producto) as CantidadLibreria from syscsvd_productos where libreria=1;");
+            $r_cantidad_productos_libreria=mysqli_fetch_array($cantidad_productos_libreria);
+        ?>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Productos de libreria en Inventario</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <?php echo $r_cantidad_productos_libreria['CantidadLibreria']; ?></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+
 <div id="contgraficos">
     <div class="divgraficos">
         <figure class="highcharts-figure-barras">
             <div id="container_barras"></div>
 
-            <table id="datatable-barras">
+            <table hidden id="datatable-barras">
                 <?php
-                    $etiquetas_barras=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_barras=mysqli_query($con,"SELECT p.id_producto, p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -34,15 +160,28 @@
                                             <?php  while($r_anios_barras=mysqli_fetch_array($anios_barras)){ ?>
                                 <tr>
                                     <th> <?php echo $r_anios_barras['Anio']; ?></th> <!--Año-->
-                                    <?php $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto join syscsvd_detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
+                                    <?php //bucle de productos/etiquetas
+                                            mysqli_data_seek($etiquetas_barras, 0);
+                                            while($r_etiquetas_barras=mysqli_fetch_array($etiquetas_barras))
+                                            { 
+                                                $ganancias_anios_barras=mysqli_query($con,"SELECT p.nombre as Producto, YEAR(v.fecha_de_venta) as Anio, SUM(d.cantidad) as Cantidad, d.precio_unitario as PrecioDeVenta, d.precio_unitario*SUM(d.cantidad) as Subtotal, c.precio_compra*SUM(d.cantidad) as Costo, ROUND(((d.precio_unitario*SUM(d.cantidad))-(c.precio_compra*SUM(d.cantidad)))) as Ganancias from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto join syscsvd_detalles_compras c on c.id_producto = d.id_producto where YEAR(v.fecha_de_venta)=".$r_anios_barras['Anio']." and p.id_producto = ".$r_etiquetas_barras['id_producto']." group by p.nombre, YEAR(v.fecha_de_venta);") ?>
                                     <?php if(mysqli_num_rows($ganancias_anios_barras)!=0){ ?>
                                         <?php  while($r_ganancias_anios_barras=mysqli_fetch_array($ganancias_anios_barras)){ ?>
                                             <td> <?php echo $r_ganancias_anios_barras['Ganancias']; ?> </td> 
                                         <?php } ?>
-                                    <?php } ?>
+                                    <?php } 
+                                    else{
+                                        ?>
+                                        <td>0</td>
+                                        <?php
+                                    } ?>
+                                    <?php 
+                                        }//fin while productos/etiquetas
+                                        ?>
                                 </tr>
-                                <?php } ?>
-                                <?php } ?>
+                                <?php
+                                    }//fin while etiquetas_areas
+                                }//fin if mes_area ?>
                             </tbody>
             </table>
         </figure>
@@ -126,7 +265,7 @@
         <figure class="highcharts-figure-pie">
             <div id="container-pie"></div>
 
-            <table id="datatable-pie">
+            <table hidden id="datatable-pie">
                 <?php $etiqueta_mes_actual_pie=mysqli_query($con,"SELECT MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta) = MONTH(CURRENT_DATE());");?>
                 <thead>
                     <tr>
@@ -136,12 +275,12 @@
                         <?php } ?> 
                     </tr>
                 </thead>
-                <?php $etiqueta_producto_pie=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;");?>
+                <?php $etiqueta_producto_pie=mysqli_query($con,"SELECT p.id_producto, p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;");?>
                 <tbody>
                     <?php if(mysqli_num_rows($etiqueta_producto_pie)!=0){ ?>
                                                 <?php  while($r_etiqueta_producto_pie=mysqli_fetch_array($etiqueta_producto_pie)){ ?>
 
-                                                    <?php $cantidad_ventasmes_pie=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where p.nombre='".$r_etiqueta_producto_pie['Producto']."' group by p.nombre;"); ?>
+                                                    <?php $cantidad_ventasmes_pie=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where p.nombre='".$r_etiqueta_producto_pie['Producto']."' AND p.id_producto = ".$r_etiqueta_producto_pie['id_producto']."  group by p.nombre;"); ?>
 
         <?php if(mysqli_num_rows($cantidad_ventasmes_pie)!=0){ ?>
             <?php  while($r_cantidad_ventasmes_pie=mysqli_fetch_array($cantidad_ventasmes_pie)){ ?>
@@ -150,7 +289,12 @@
                         <th> <?php echo $r_etiqueta_producto_pie['Producto']; ?></th>
                                 <td> <?php echo $r_cantidad_ventasmes_pie['Cantidad']; ?> </td>
                             <?php } ?>
-                        <?php } ?>
+                        <?php }
+                         else{
+                            ?>
+                            <td>0</td>
+                            <?php
+                        } ?>
                     </tr>
                     <?php } ?>
                                     <?php } ?>
@@ -167,7 +311,7 @@
                     type: 'pie'
                 },
                 title: {
-                    text: 'Live births in Norway'
+                    text: 'Ventas totales en el mes'
                 },
                 xAxis: {
                     type: 'category'
@@ -230,9 +374,9 @@
         <figure class="highcharts-figure-area">
             <div id="container_area"></div>
 
-            <table id="datatable-area">
+            <table hidden id="datatable-area">
                 <?php
-                    $etiquetas_area=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_area=mysqli_query($con,"SELECT p.id_producto, p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -243,19 +387,40 @@
                             </thead>
                             <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
                             <tbody>
-                                <?php if(mysqli_num_rows($mes_area)!=0){ ?>
-                                            <?php  while($r_mes_area=mysqli_fetch_array($mes_area)){ ?>
-                                <tr>
-                                    <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
-                                    <?php $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
-                                    <?php if(mysqli_num_rows($ventas_mes_area)!=0){ ?>
-                                        <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area)){ ?>
-                                            <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
-                                        <?php } ?>
-                                    <?php } ?>
-                                </tr>
-                                <?php } ?>
-                                <?php } ?>
+                                <?php 
+                                if(mysqli_num_rows($mes_area)!=0)
+                                { 
+                                    while($r_mes_area=mysqli_fetch_array($mes_area))
+                                    { 
+                                        ?>
+                                        <tr>
+                                            <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
+                                            <?php
+                                            //bucle de productos/etiquetas
+                                            mysqli_data_seek($etiquetas_area, 0);
+                                            while($r_etiquetas_area=mysqli_fetch_array($etiquetas_area))
+                                            { 
+                                             $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." and p.id_producto = ".$r_etiquetas_area['id_producto']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
+                                            <?php   if(mysqli_num_rows($ventas_mes_area)!=0)
+                                                    { ?>
+                                                <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area))
+                                                        { ?>
+                                                        <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
+                                                    <?php } ?>
+                                                <?php }
+                                                else{
+                                                    ?>
+                                                    <td>0</td>
+                                                    <?php
+                                                } ?>
+                                       
+                                        <?php 
+                                        }//fin while productos/etiquetas
+                                        ?>
+                                    </tr>
+                                        <?php
+                                    }//fin while etiquetas_areas
+                                }//fin if mes_area ?>
                             </tbody>
             </table>
         </figure>
@@ -270,7 +435,7 @@
                 type: 'area'
             },
             title: {
-                text: 'Ganancias por año'
+                text: 'Ventas por mes'
             },
             xAxis: {
                 type: 'category'
@@ -278,7 +443,7 @@
             yAxis: {
                 allowDecimals: false,
                 title: {
-                    text: 'Ganancias'
+                    text: 'Cantidad'
                 }
             }
         });
@@ -339,9 +504,9 @@
         <figure class="highcharts-figure-line">
             <div id="container_line"></div>
 
-            <table id="datatable-line">
+            <table hidden id="datatable-line">
                 <?php
-                    $etiquetas_area=mysqli_query($con,"SELECT p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_area=mysqli_query($con,"SELECT p.id_producto, p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
@@ -352,19 +517,40 @@
                             </thead>
                             <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
                             <tbody>
-                                <?php if(mysqli_num_rows($mes_area)!=0){ ?>
-                                            <?php  while($r_mes_area=mysqli_fetch_array($mes_area)){ ?>
-                                <tr>
-                                    <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
-                                    <?php $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
-                                    <?php if(mysqli_num_rows($ventas_mes_area)!=0){ ?>
-                                        <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area)){ ?>
-                                            <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
-                                        <?php } ?>
-                                    <?php } ?>
-                                </tr>
-                                <?php } ?>
-                                <?php } ?>
+                                <?php 
+                                if(mysqli_num_rows($mes_area)!=0)
+                                { 
+                                    while($r_mes_area=mysqli_fetch_array($mes_area))
+                                    { 
+                                        ?>
+                                        <tr>
+                                            <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
+                                            <?php
+                                            //bucle de productos/etiquetas
+                                            mysqli_data_seek($etiquetas_area, 0);
+                                            while($r_etiquetas_area=mysqli_fetch_array($etiquetas_area))
+                                            { 
+                                             $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." and p.id_producto = ".$r_etiquetas_area['id_producto']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
+                                            <?php   if(mysqli_num_rows($ventas_mes_area)!=0)
+                                                    { ?>
+                                                <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area))
+                                                        { ?>
+                                                        <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
+                                                    <?php } ?>
+                                                <?php }
+                                                else{
+                                                    ?>
+                                                    <td>0</td>
+                                                    <?php
+                                                } ?>
+                                       
+                                        <?php 
+                                        }//fin while productos/etiquetas
+                                        ?>
+                                    </tr>
+                                        <?php
+                                    }//fin while etiquetas_areas
+                                }//fin if mes_area ?>
                             </tbody>
             </table>
         </figure>
@@ -379,7 +565,7 @@
                 type: 'line'
             },
             title: {
-                text: 'Ganancias por año'
+                text: 'Ventas por mes'
             },
             xAxis: {
                 type: 'category'
@@ -387,7 +573,7 @@
             yAxis: {
                 allowDecimals: false,
                 title: {
-                    text: 'Ganancias'
+                    text: 'Cantidad'
                 }
             }
         });
@@ -443,360 +629,36 @@
         </style>
     </div>
 </div>
-
-<style>
-    #contgraficos{
-        float: left;
-        width: 100%;
-    }
-    .divgraficos{
-        float: left;
-        width: 49.8%;
-        margin: 0.1%;
-        height: 750px;
-        border: 1px solid #D5DBDB;
-        border-radius: 4px;
-    }
-    @media screen and (max-width:768px){
+    <style>
+        #contgraficos{
+            float: left;
+            width: 100%;
+        }
         .divgraficos{
-            width:100%;
-            height: 400px;
+            float: left;
+            width: 49.8%;
+            margin: 0.1%;
+            height: 450px;
+            border: 1px solid #D5DBDB;
+            border-radius: 4px;
         }
-        #container-barras {
-            height: 200px !important;
+        @media screen and (max-width:768px){
+            .divgraficos{
+                width:100%;
+                height: 400px;
+            }
+            #container-barras {
+                height: 200px !important;
+            }
+            #container-pie {
+                height: 200px !important;
+            }
+            #container-area {
+                height: 200px !important;
+            }
+            #container-line {
+                height: 200px !important;
+            }
         }
-        #container-pie {
-            height: 200px !important;
-        }
-        #container-area {
-            height: 200px !important;
-        }
-        #container-line {
-            height: 200px !important;
-        }
-    }
-</style>
-
+    </style>
 </div>
-
-    
-
-
-<!------------------------------------------------------------------------------------------>
-<!-- Content Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
-
-    <!-- Main Content -->
-    <div id="content">
-    <div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Informe</h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-    </div>
-
-    <!-- Content Row -->
-    <div class="row">
-        <?php $s=mysqli_query($con,"SELECT * FROM syscsvd_ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE());") ?> 
-        <!--SQL FECHA ACTUAL: SELECT * FROM syscsvd_ventas WHERE YEAR(fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(fecha_de_venta)  = MONTH(CURRENT_DATE())-->
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Ventas del Mes</div>
-
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo mysqli_num_rows($s) ?></div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>   <!--UTILIZAR ESTE GRAFICO-->
-
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Ganacia del mes actual</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                        <div class="progress-bar bg-info" role="progressbar"
-                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pending Requests Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content Row -->
-
-    <div class="row">
-
-    <!-- Area Chart -->
-    <div class="col-xl-8 col-lg-7">
-                                <div class="card shadow mb-4">
-                                    <!-- Card Header - Dropdown -->
-                                    <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div class="chart-area">
-                                            <canvas id="myAreaChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pie Chart -->
-                            <div class="col-xl-4 col-lg-5">
-                                <div class="card shadow mb-4">
-                                    <!-- Card Header - Dropdown -->
-                                    <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div class="chart-pie pt-4 pb-2">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                        <div class="mt-4 text-center small">
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle text-primary"></i> Direct
-                                            </span>
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle text-success"></i> Social
-                                            </span>
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle text-info"></i> Referral
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Content Row -->
-                        <div class="row">
-
-                            <!-- Content Column -->
-                            <div class="col-lg-6 mb-4">
-
-                                <!-- Project Card Example -->
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <h4 class="small font-weight-bold">Server Migration <span
-                                                class="float-right">20%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                                aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Sales Tracking <span
-                                                class="float-right">40%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Customer Database <span
-                                                class="float-right">60%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar" role="progressbar" style="width: 60%"
-                                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Payout Details <span
-                                                class="float-right">80%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                                aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Account Setup <span
-                                                class="float-right">Complete!</span></h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Color System -->
-                                <div class="row">
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-primary text-white shadow">
-                                            <div class="card-body">
-                                                Primary
-                                                <div class="text-white-50 small">#4e73df</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-success text-white shadow">
-                                            <div class="card-body">
-                                                Success
-                                                <div class="text-white-50 small">#1cc88a</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-info text-white shadow">
-                                            <div class="card-body">
-                                                Info
-                                                <div class="text-white-50 small">#36b9cc</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-warning text-white shadow">
-                                            <div class="card-body">
-                                                Warning
-                                                <div class="text-white-50 small">#f6c23e</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-danger text-white shadow">
-                                            <div class="card-body">
-                                                Danger
-                                                <div class="text-white-50 small">#e74a3b</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-secondary text-white shadow">
-                                            <div class="card-body">
-                                                Secondary
-                                                <div class="text-white-50 small">#858796</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-light text-black shadow">
-                                            <div class="card-body">
-                                                Light
-                                                <div class="text-black-50 small">#f8f9fc</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-dark text-white shadow">
-                                            <div class="card-body">
-                                                Dark
-                                                <div class="text-white-50 small">#5a5c69</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    <!-- /.container-fluid -->
-
-</div>
-            <!-- End of Main Content -->
-             <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="js/demo/chart-area-demo.js"></script>
-<script src="js/demo/chart-pie-demo.js"></script>
