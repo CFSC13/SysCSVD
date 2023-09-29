@@ -12,7 +12,7 @@ if (isset($_GET["w1"])) {
       $codigo= $_GET["w1"];                                       
       // Obtener el código de barras escaneado
       // Realizar la consulta a la base de datos para obtener el nombre del producto
-      $query = "SELECT * FROM syscsvd_productos WHERE codigo_barra = '$codigo'";
+      $query = "SELECT * FROM productos WHERE codigo_barra = '$codigo'";
       $result = mysqli_query($con,$query);
       $json = [];
       while ($row = mysqli_fetch_array($result)) {

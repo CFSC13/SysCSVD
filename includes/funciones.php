@@ -69,7 +69,7 @@ function rubro($id)
 
 function personas($id)
 {
-	$sql=mysqli_query($con,"select nombre from syscsvd_productos where id=$id");
+	$sql=mysqli_query($con,"select nombre from productos where id=$id");
 	if(mysqli_num_rows($sql)!=0)
 	{
 		$r=mysqli_fetch_array($sql);
@@ -237,9 +237,9 @@ $content='
 return $content;
 }
  
-function syscsvd_productos($id)
+function productos($id)
 {
-	$sql=mysqli_query($con,"select nombre from syscsvd_productos where id=$id");
+	$sql=mysqli_query($con,"select nombre from productos where id=$id");
 	if(mysqli_num_rows($sql)!=0)
 	{
 		$r=mysqli_fetch_array($sql);

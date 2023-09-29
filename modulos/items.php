@@ -17,7 +17,7 @@ if($_GET[add]=="ok")
     if(($_POST[nombre]!=""))
     {
                     
-            $sql=mysqli_query($con,"insert into syscsvd_items_interno (nombre_item, url, id_grupo) values(lower('$_POST[nombre]'), lower('$_POST[url]'), $_POST[grupo_menu])");
+            $sql=mysqli_query($con,"insert into items_interno (nombre_item, url, id_grupo) values(lower('$_POST[nombre]'), lower('$_POST[url]'), $_POST[grupo_menu])");
             
             if(!mysqli_error())
             {
@@ -42,7 +42,7 @@ if($_GET[mod]=="ok")
     if(($_POST[nombre]!=""))
     {
                     
-            $sql=mysqli_query($con,"update syscsvd_items_interno set nombre_item=lower('$_POST[nombre]'), url=lower('$_POST[url]'), id_grupo=$_POST[grupo_menu] where id_item=$_POST[id]");
+            $sql=mysqli_query($con,"update items_interno set nombre_item=lower('$_POST[nombre]'), url=lower('$_POST[url]'), id_grupo=$_POST[grupo_menu] where id_item=$_POST[id]");
 
             if(!mysqli_error())
             {
@@ -65,7 +65,7 @@ if($_GET[mod]=="ok")
 if($_GET[del]!="")
 {
 
-        $sql=mysqli_query($con,"delete from syscsvd_items_interno where id_item=$_GET[del]");
+        $sql=mysqli_query($con,"delete from items_interno where id_item=$_GET[del]");
         
         if(!mysqli_error())
         {
@@ -96,7 +96,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from syscsvd_items_interno where id_item=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from items_interno where id_item=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -128,7 +128,7 @@ if($_GET[del]!="")
                                     <select name="grupo_menu" id="grupo_menu" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
                                         <option value="">Seleccione...</option>
                                         <?php
-                                        $sql_g=mysqli_query($con,"select *from syscsvd_grupos_menu order by nombre_grupo");
+                                        $sql_g=mysqli_query($con,"select *from grupos_menu order by nombre_grupo");
                                         if(mysqli_num_rows($sql_g)!=0)
                                         {
                                             while($r_g=mysqli_fetch_array($sql_g))
@@ -178,13 +178,13 @@ if($_GET[del]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select * from syscsvd_items_interno order by id_grupo, nombre_item"); 
+                                        <?php $q=mysqli_query($con,"select * from items_interno order by id_grupo, nombre_item"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
                                                      <td><?php echo $r['nombre_item']; ?></td>
                                                      <td><?php echo $r['url']; ?></td>
-                                                     <td><?php echo datos_complejos1($con, "syscsvd_grupos_menu","nombre_grupo","id_grupo",$r['id_grupo']); ?></td>
+                                                     <td><?php echo datos_complejos1($con, "grupos_menu","nombre_grupo","id_grupo",$r['id_grupo']); ?></td>
                                                      <td><a href="home.php?pagina=items&ver=<?php echo $r['id_item'] ?>" title="Editar" alt="Editar"><i class="fas fa-edit icono_editar"></i></a> 
                                                         <a href="javascript:if(confirm('Esta Seguro?')){ window.location='home.php?pagina=items&del=<?php echo $r['id_item'] ?>'; }" title="Eliminar" alt="Eliminar"><i class="fas fa-eraser icono_borrar"></i></a></td>
                                                  </tr>       
