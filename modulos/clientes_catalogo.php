@@ -17,13 +17,13 @@ ini_set('display_errors', '0');
     <title>SysCSVD - Catalogo de Clientes</title>
 </head>
 <body>
-    <h1 id="titulo">CATALOGO</h1> 
+    <h1 id="titulo">Catálogo</h1> 
     <?php
         $showform="";
         $showtable="";
         if($_GET[ver]!=0)
         {
-            $sql=mysqli_query($con,"select *from productos where id_producto=$_GET[ver]");
+            $sql=mysqli_query($con,"select *from syscsvd_productos where id_producto=$_GET[ver]");
                 if(mysqli_num_rows($sql)!=0)
                 {   
                     $r=mysqli_fetch_array($sql);
@@ -62,10 +62,10 @@ ini_set('display_errors', '0');
         <tbody>
         <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
-                                    FROM productos P 
-                                    JOIN categorias C 
+                                    FROM syscsvd_productos P 
+                                    JOIN syscsvd_categorias C 
                                     ON P.id_categoria = C.id_categoria
-                                    JOIN marcas M 
+                                    JOIN syscsvd_marcas M 
                                     ON P.id_marca = M.id_marca
                                     order by P.nombre;");  
             if(mysqli_num_rows($q)!=0){
@@ -96,19 +96,30 @@ ini_set('display_errors', '0');
         color: #292E49;
     }
     table, th, td{
-        border: 1px solid #0052D4;
         font-size: 12px;
     }
     th, td{
         padding: 1%;
     }
+    td{
+        background: #D6EAF8 ;
+        font-weight: bold;
+    }
+    th{
+        background: linear-gradient(#4286f4,#6DD5FA);
+        border-radius: 5px; 
+        color: #E5E7E9 ;
+    }
     body{
         text-align: center;
         align-items: center;
         min-height: 100vh;
-        background: linear-gradient(#4286f4,#6DD5FA);
+        background: #EAEDED ;
     }
     #titulo{
-        padding-top:5%;
+        font-family: arial;
+        padding-top:2%;
+        padding-bottom:1%;
+        border-bottom: 1px solid #CCD1D1 ;
     }
 </style>

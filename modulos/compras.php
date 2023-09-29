@@ -16,12 +16,12 @@ if($_GET['add']=="ok")
     if($_POST['cod_prod']!="" && $_POST['can_prod']!="")
     {
        // echo "insert into facturacion (fecha, id_cliente, id_forma_pago, fecha_vencimiento,cerrado,total) values(now(), $_POST['clientes'], $_POST['condicion_venta'], '$_POST[fecha_vencimiento]', 0, '$_POST[total]') RETURNING *;";
-        $sql=mysqli_query($con,"insert into compras (importe_total, fecha_compra, id_usuario) values('$_POST[total]', '$_POST[fecha_compra]', $_POST[id_usuario])");
+        $sql=mysqli_query($con,"insert into syscsvd_compras (importe_total, fecha_compra, id_usuario) values('$_POST[total]', '$_POST[fecha_compra]', $_POST[id_usuario])");
         //echo "'$_POST[total]', '$_POST[fecha_compra]', '$_POST[id_usuario]'";
 
         if(!mysqli_error($con))
         {
-            $r=mysqli_fetch_array(mysqli_query($con,"select MAX(id_compra) as id from compras"));
+            $r=mysqli_fetch_array(mysqli_query($con,"select MAX(id_compra) as id from syscsvd_compras"));
             $cant_articulos=count($_POST['cod_prod']);
             $n=0;
             $error=0;
@@ -33,10 +33,10 @@ if($_GET['add']=="ok")
                     $can=$_POST['can_prod'][$n];
                     $rp=$_POST['precio_compra'];
                     $subtotal=$rp*$can;
-                    $sql2.="insert into detalles_compras (id_producto,id_compra,precio_compra,cantidad,subtotal) values('".$cod."', $r[id], '".$rp."', $can, '$subtotal');";
+                    $sql2.="insert into syscsvd_detalles_compras (id_producto,id_compra,precio_compra,cantidad,subtotal) values('".$cod."', $r[id], '".$rp."', $can, '$subtotal');";
                     //echo "<hr><h1>".$n.")-".$sql2."</h1>";
                     //se actualiza el stock
-                    $sql_update = "UPDATE productos SET stock = stock + $can WHERE id_producto = $cod";
+                    $sql_update = "UPDATE syscsvd_productos SET stock = stock + $can WHERE id_producto = $cod";
                     mysqli_query($con, $sql_update);
                 }
                 $n++;
@@ -167,7 +167,7 @@ if($_GET['del']!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from compras where id_compra=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from syscsvd_compras where id_compra=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -200,7 +200,7 @@ if($_GET['del']!="")
                                     " aria-describedby="basic-addon2" style="margin-right: 1%; width: 100%;">
                                         <option value="">Seleccione...</option>
                                         <?php
-                                        $sql_g=mysqli_query($con,"select * from productos");
+                                        $sql_g=mysqli_query($con,"select * from syscsvd_productos");
                                         if(mysqli_num_rows($sql_g)!=0)
                                         {
                                             while($r_g=mysqli_fetch_array($sql_g))
@@ -224,12 +224,10 @@ if($_GET['del']!="")
                                     <label for="Cantidad">Precio de Compra</label>
                                     <input type="number" class="form-control" id="precio_compra" name="precio_compra" value="" >
                                
-                                </div>
-                                <div class="form-group">
-                                    <label for="fecha_compra">Fecha de Compra</label>
-                                    <input type="date" class="form-control" id="fecha_compra" name="fecha_compra" value="" required>
-                               
-                                </div>
+                                    <div class="form-group">
+                                        <label for="fecha_compra">Fecha de Compra</label>
+                                        <input type="date" class="form-control" id="fecha_compra" name="fecha_compra" required>
+                                    </div>
                                 <br>
                                 
                                 <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['user']; ?>">
@@ -254,7 +252,7 @@ if($_GET['del']!="")
                                     </table>
                                 </div>
                                 </fieldset>    
-                                <p style="width: 100%; text-align: center;">
+                                <p style="width: 100%; text-align: center;" >
                                     <br>
                                     <button type="submit" class="btn btn-secondary">Registrar Compra </button>
                                 </p>
@@ -264,74 +262,17 @@ if($_GET['del']!="")
                     </div>
             
 
-           
-            
-                     <!-- Page Heading -->
-                    <div class="card shadow mb-4 mx-auto" >
-                        <div class="card-header py-3" id="headingTwo">
-                        <h6 class="m-0 font-weight-bold text-primary" data-toggle="collapse" data-target="#collapseListado" aria-expanded="true" aria-controls="collapseListado">Últimas 10 Facturaciones</h6>
-                        </div>
-                        <div id="collapseListado" class="collapse <?php echo $showtable; ?>" aria-labelledby="headingTwo" data-parent="#accordion">
-                            <div class="card-body" >
-                             <div class="table-responsive" style="padding-right: 1% !important;">
-                                    <table class="table table-striped table-bordered display nowrap" id="dataTable-mensajes" width="100%" cellspacing="0">
-                                    <thead>
-                                    <tr>
-                                        <th>Cod.</th>
-                                        <th>Cliente</th>
-                                        <th>Fecha</th>
-                                        <th>Forma de Pago</th>
-                                        <th>% Descuento</th>
-                                        <th>Total</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                    </thead>
-                                    <tfoot>
-                                    <tr>
-                                       <th>Cod.</th>
-                                        <th>Cliente</th>                                        
-                                        <th>Fecha</th>
-                                        <th>Forma de Pago</th>
-                                        <th>% Descuento</th>
-                                        <th>Total</th>                                        
-                                        <th>Opciones</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <?php 
-                                        //saco los últimos 10 registros
-                                        //uso  distinc para que traiga solo una fila
-                                        $q=mysqli_query($con,"SELECT DISTINCT f.id_factura, c.nombre as cliente, f.importe_total, f.fecha_de_emision, c.id_cliente, cv.nombre as forma_pago, df.descuento FROM cliente c JOIN factura f on c.id_cliente=f.id_cliente JOIN detalle_factura df on f.id_factura=df.id_factura JOIN condicion_venta cv on f.id_condicion_venta=cv.id_condicion_venta GROUP by f.id_factura;"); 
-                                            if(mysqli_num_rows($q)!=0){
-                                                while($r=mysqli_fetch_array($q)){?>
-                                                 <tr>
-                                                    <td><?php echo $r['id_factura']; ?></td>
-                                                    <td style="text-transform: capitalize;"><?php echo $r['cliente']; ?></td>
-                                                    <td><?php echo date('d/m/Y', strtotime($r['fecha_de_emision'])); ?></td>
-                                                    <td><?php echo $r['forma_pago']; ?></td>
-                                                    <td><?php echo $r['descuento']; ?></td>
-                                                    <td>$<?php echo number_format(($r['importe_total']-(($r['descuento']*$r['total'])/100)),2,',','.'); ?></td>
-                                                    <td>
-                                                        <a href="presupuesto_pdf.php?id=<?php echo $r['id_factura'] ?>"  class="btn btn-primary" target="_blank" title="Ver PDF" alt="Ver PDF">
-                                                            <i class="fas fa-file-pdf"></i> Ver PDF
-                                                        </a>
-                                                        <a href="javascript:if(confirm('¿Seguro desea elminar la factura?')){ window.location='home.php?pagina=facturacion&del=<?php echo $r['id_factura'] ?>'; }" class="btn btn-danger" title="Eliminar" alt="Eliminar">
-                                                            <i class="fas fa-eraser"></i> Eliminar
-                                                        </a>
-                                                    </td>
-                                                 </tr>       
-                                             <?php }
-                                             }?>  
-                                              
-                                    </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
     </div>  
+
+
+    <script>
+    // Obtén la fecha actual en formato ISO (AAAA-MM-DD)
+    var fechaActual = new Date().toISOString().split('T')[0];
+    
+    // Establece la fecha actual como valor predeterminado
+    document.getElementById("fecha_compra").value = fechaActual;
+</script>
 
 <script type="text/javascript">
     var total=0;

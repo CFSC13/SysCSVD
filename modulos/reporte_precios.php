@@ -35,7 +35,7 @@ if($_SESSION[user]==0)
                                     " aria-describedby="basic-addon2" style="margin-right: 1%; width: 100%;">
                                         <option value="">Seleccione...</option>
                                         <?php
-                                        $sql_g=mysqli_query($con,"select p.*, m.nombre as marca, c.nombre as categoria from productos p, marcas m, categorias c where p.id_marca=m.id and p.activo='si' and p.id_categoria=c.id");
+                                        $sql_g=mysqli_query($con,"select p.*, m.nombre as marca, c.nombre as categoria from syscsvd_productos p, syscsvd_marcas m, syscsvd_categorias c where p.id_marca=m.id and p.activo='si' and p.id_categoria=c.id");
                                         if(mysqli_num_rows($sql_g)!=0)
                                         {
                                             while($r_g=mysqli_fetch_array($sql_g))
@@ -113,10 +113,10 @@ if($_SESSION[user]==0)
                                        echo "<script>$('#descargar').removeClass('d-none');</script>";
                                        echo "<script>$('#descargar').on('click',function(){ descargar('".urlencode($where)."'); });</script>";
                                            
-                                        $q=mysqli_query($con,"select *, date_format(fecha,'%d/%m/%Y') as fecha from productos_historial_precio where $where"); 
+                                        $q=mysqli_query($con,"select *, date_format(fecha,'%d/%m/%Y') as fecha from syscsvd_productos_historial_precio where $where"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){
-                                                    $rp=mysqli_fetch_array(mysqli_query($con,"select * from productos where id=".$r['id_producto']));
+                                                    $rp=mysqli_fetch_array(mysqli_query($con,"select * from syscsvd_productos where id=".$r['id_producto']));
                                                     ?>
                                                  <tr>
                                                     <td><?php echo $rp['nombre']; ?></td>

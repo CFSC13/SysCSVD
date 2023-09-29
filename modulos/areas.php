@@ -18,7 +18,7 @@ if($_GET[add]=="ok")
     if(($_POST[nombre]!=""))
     {
                     
-            $sql=mysqli_query($con,"insert into areas (nombre_area) values(lower('$_POST[nombre]'))");
+            $sql=mysqli_query($con,"insert into syscsvd_areas (nombre_area) values(lower('$_POST[nombre]'))");
             
             if(!mysqli_error($con))
             {
@@ -43,7 +43,7 @@ if($_GET[mod]=="ok")
     if(($_POST[nombre]!=""))
     {
                     
-            $sql=mysqli_query($con,"update areas set nombre_area=lower('$_POST[nombre]') where id_area=$_POST[id]");
+            $sql=mysqli_query($con,"update syscsvd_areas set nombre_area=lower('$_POST[nombre]') where id_area=$_POST[id]");
 
             if(!mysqli_error())
             {
@@ -66,7 +66,7 @@ if($_GET[mod]=="ok")
 if($_GET[del]!="")
 {
 
-        $sql=mysqli_query($con,"delete from areas where id_area=$_GET[del]");
+        $sql=mysqli_query($con,"delete from syscsvd_areas where id_area=$_GET[del]");
         
         if(!mysqli_error())
         {
@@ -97,7 +97,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from areas where id_area=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from syscsvd_areas where id_area=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -156,7 +156,7 @@ if($_GET[del]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select * from areas order by nombre_area"); 
+                                        <?php $q=mysqli_query($con,"select * from syscsvd_areas order by nombre_area"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
