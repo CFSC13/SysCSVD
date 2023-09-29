@@ -17,7 +17,7 @@ if($_GET[add]=="ok")
     if(($_POST[nombre]!=""))
     {
                     
-            $sql=mysqli_query($con,"insert into syscsvd_grupos_menu (nombre_grupo, icono) values(lower('$_POST[nombre]'), lower('$_POST[icono]'))");
+            $sql=mysqli_query($con,"insert into grupos_menu (nombre_grupo, icono) values(lower('$_POST[nombre]'), lower('$_POST[icono]'))");
             
             if(!mysqli_error())
             {
@@ -42,7 +42,7 @@ if($_GET[mod]=="ok")
     if(($_POST[nombre]!=""))
     {
                     
-            $sql=mysqli_query($con,"update syscsvd_grupos_menu set nombre_grupo=lower('$_POST[nombre]'), icono=lower('$_POST[icono]') where id_grupo=$_POST[id]");
+            $sql=mysqli_query($con,"update grupos_menu set nombre_grupo=lower('$_POST[nombre]'), icono=lower('$_POST[icono]') where id_grupo=$_POST[id]");
 
             if(!mysqli_error())
             {
@@ -65,7 +65,7 @@ if($_GET[mod]=="ok")
 if($_GET[del]!="")
 {
 
-        $sql=mysqli_query($con,"delete from syscsvd_grupos_menu where id_grupo=$_GET[del]");
+        $sql=mysqli_query($con,"delete from grupos_menu where id_grupo=$_GET[del]");
         
         if(!mysqli_error())
         {
@@ -96,7 +96,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from syscsvd_grupos_menu where id_grupo=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from grupos_menu where id_grupo=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -159,7 +159,7 @@ if($_GET[del]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select * from syscsvd_grupos_menu order by nombre_grupo"); 
+                                        <?php $q=mysqli_query($con,"select * from grupos_menu order by nombre_grupo"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>

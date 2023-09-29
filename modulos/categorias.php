@@ -16,7 +16,7 @@ if($_GET[add]=="ok")
     {
         
 
-            $sql=mysqli_query($con,"insert into syscsvd_categorias (nombre) values(lower('$_POST[nombre]'))");
+            $sql=mysqli_query($con,"insert into categorias (nombre) values(lower('$_POST[nombre]'))");
             
             if(!mysqli_error($con))
             {
@@ -41,7 +41,7 @@ if($_GET[mod]=="ok")
     if(($_POST[nombre]!=""))
     {
         
-            $sql=mysqli_query($con,"update syscsvd_categorias set nombre=lower('$_POST[nombre]') where id_categoria=$_POST[id_categoria]");
+            $sql=mysqli_query($con,"update categorias set nombre=lower('$_POST[nombre]') where id_categoria=$_POST[id_categoria]");
 
             if(!mysqli_error())
             {
@@ -64,7 +64,7 @@ if($_GET[mod]=="ok")
 if($_GET[del]!="")
 {
 
-        $sql=mysqli_query($con,"delete from syscsvd_categorias where id_categoria=$_GET[del]");
+        $sql=mysqli_query($con,"delete from categorias where id_categoria=$_GET[del]");
         
         if(!mysqli_error($con))
         {
@@ -97,7 +97,7 @@ if($_GET[del]!="")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from syscsvd_categorias where id_categoria=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from categorias where id_categoria=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -156,7 +156,7 @@ if($_GET[del]!="")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select * from syscsvd_categorias order by nombre"); 
+                                        <?php $q=mysqli_query($con,"select * from categorias order by nombre"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>

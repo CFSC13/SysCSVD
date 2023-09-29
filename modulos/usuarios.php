@@ -15,7 +15,7 @@ if($_GET[add]=="ok")
 {
     if($_POST[nombre]!="" && $_POST[usuario]!="" && $_POST[clave]!="" && $_POST[roles]!="")
     {
-        $sql=mysqli_query($con,"insert into syscsvd_usuarios (nombre,usuario,clave,id_area,correo) values(lower('$_POST[nombre]'),'$_POST[usuario]','$_POST[clave]',$_POST[roles],lower('$_POST[correo]'))");
+        $sql=mysqli_query($con,"insert into usuarios (nombre,usuario,clave,id_area,correo) values(lower('$_POST[nombre]'),'$_POST[usuario]','$_POST[clave]',$_POST[roles],lower('$_POST[correo]'))");
             if(!mysqli_error())
             {
                 echo "<script>alert('Registro Insertado Correctamente')</script>";
@@ -37,7 +37,7 @@ if($_GET[mod]=="ok")
 {
     if($_POST[nombre]!="" && $_POST[usuario]!="" && $_POST[clave]!="" && $_POST[roles]!="")
     {
-        $sql=mysqli_query($con,"update syscsvd_usuarios set nombre=lower('$_POST[nombre]'), usuario='$_POST[usuario]', clave='$_POST[clave]', id_area=$_POST[roles], correo='$_POST[correo]' where id_usuario=$_POST[id]");
+        $sql=mysqli_query($con,"update usuarios set nombre=lower('$_POST[nombre]'), usuario='$_POST[usuario]', clave='$_POST[clave]', id_area=$_POST[roles], correo='$_POST[correo]' where id_usuario=$_POST[id]");
         if(!mysqli_error())
         {
             echo "<script>alert('Registro Actualizado Correctamente.');</script>";
@@ -71,7 +71,7 @@ if($_GET[mod]=="ok")
                         $showtable="";
                         if($_GET[ver]!=0)
                         {
-                            $sql=mysqli_query($con,"select *from syscsvd_usuarios where id_usuario=$_GET[ver]");
+                            $sql=mysqli_query($con,"select *from usuarios where id_usuario=$_GET[ver]");
                                 if(mysqli_num_rows($sql)!=0)
                                 {   
                                     $r=mysqli_fetch_array($sql);
@@ -96,7 +96,7 @@ if($_GET[mod]=="ok")
                                                 <select id="roles" class="form-control" name="roles" required>
                                                     <option value="">Seleccione...</option>
                                                     <?php
-                                                    $sql_in=mysqli_query($con,"select *from syscsvd_areas order by nombre_area");
+                                                    $sql_in=mysqli_query($con,"select *from areas order by nombre_area");
                                                     if(mysqli_num_rows($sql_in)>0)
                                                     {
                                                         while($r_in=mysqli_fetch_array($sql_in))
@@ -174,7 +174,7 @@ if($_GET[mod]=="ok")
                                     </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php $q=mysqli_query($con,"select u.id_usuario,u.nombre,i.nombre_area as inmo, u.correo from syscsvd_usuarios u, syscsvd_areas i where u.id_area=i.id_area order by i.nombre_area, u.nombre"); 
+                                        <?php $q=mysqli_query($con,"select u.id_usuario,u.nombre,i.nombre_area as inmo, u.correo from usuarios u, areas i where u.id_area=i.id_area order by i.nombre_area, u.nombre"); 
                                             if(mysqli_num_rows($q)!=0){
                                                 while($r=mysqli_fetch_array($q)){?>
                                                  <tr>
