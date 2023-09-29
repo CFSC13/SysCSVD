@@ -429,7 +429,7 @@ function onScanSuccess(decodedText, decodedResult) {
   var scanInputValue = decodedText;
 
   $.ajax({
-    url: "https://e85f-138-186-161-180.ngrok-free.app/syscsvd/buscarAjax.php",
+    url: "buscarAjax.php",
     //url: "http://localhost/syscsvd/buscarAjax.php",
     data: { w1: scanInputValue },
     type: "GET",
