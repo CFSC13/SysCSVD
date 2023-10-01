@@ -3,7 +3,7 @@ set_time_limit(0);
 include("includes/conexion.php");
 conectar();
 
-for($compra=1;$compra<10;$compra++)
+for($compra=1;$compra<15;$compra++)
 {
 	$id_compra=$id_compra+1;
 	$precio_compra= rand(200,600); 
@@ -17,7 +17,7 @@ for($compra=1;$compra<10;$compra++)
 	$sql_d=mysqli_query($con, $sql_compras);
 }
 
-function fecha_aleatoria($formato = "Y-m-d", $limiteInferior = "2023-09-01", $limiteSuperior = "2023-09-27"){
+function fecha_aleatoria($formato = "Y-m-d", $limiteInferior = "2023-10-01", $limiteSuperior = "2023-10-27"){
 	// Convertimos la fecha como cadena a milisegundos
 	$milisegundosLimiteInferior = strtotime($limiteInferior);
 	$milisegundosLimiteSuperior = strtotime($limiteSuperior);

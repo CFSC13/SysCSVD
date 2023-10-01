@@ -75,7 +75,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Ganacias del mes actual</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$<?php echo $ganancia_mes; ?></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">$<?php echo number_format($ganancia_mes, 2, '.', ','); ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -394,7 +394,7 @@
                                     { 
                                         ?>
                                         <tr>
-                                            <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
+                                            <th> <?php echo "Mes ".$r_mes_area['Mes']; ?></th> <!--Año-->
                                             <?php
                                             //bucle de productos/etiquetas
                                             mysqli_data_seek($etiquetas_area, 0);
@@ -506,36 +506,36 @@
 
             <table hidden id="datatable-line">
                 <?php
-                    $etiquetas_area=mysqli_query($con,"SELECT p.id_producto, p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalle_ventas d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
+                    $etiquetas_line=mysqli_query($con,"SELECT p.id_producto, p.nombre as Producto,  SUM(d.cantidad) as Cantidad from syscsvd_detalles_compras d join syscsvd_productos p on d.id_producto = p.id_producto group by p.nombre;") //agrupar datos con GROUP BY por year, month, wekk?>
                             <thead>
                                 <tr> 
                                     <th></th>  <!--DEBE QUEDAR VACIO, SI SE CREAN MAS VACIOS SE ROMPE-->
-                                    <?php  while($r_etiquetas_area=mysqli_fetch_array($etiquetas_area)){ ?>
-                                    <th><?php echo $r_etiquetas_area['Producto']; ?></th> <!--Producto 1--> 
+                                    <?php  while($r_etiquetas_line=mysqli_fetch_array($etiquetas_line)){ ?>
+                                    <th><?php echo $r_etiquetas_line['Producto']; ?></th> <!--Producto 1--> 
                                     <?php } ?> 
                                 </tr>
                             </thead>
-                            <?php $mes_area=mysqli_query($con,"SELECT YEAR(v.fecha_de_venta) as Anio, MONTH(v.fecha_de_venta) as Mes,  SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) group by Mes;"); ?>       
+                            <?php $semana_line=mysqli_query($con,"SELECT month(c.fecha_compra) as Mes, week(c.fecha_compra) as Semana,  SUM(d.cantidad) as Cantidad from syscsvd_compras c join syscsvd_detalles_compras d on c.id_compra = d.id_compra where month(c.fecha_compra) = month(CURRENT_DATE()) group by Semana; "); ?>       
                             <tbody>
                                 <?php 
-                                if(mysqli_num_rows($mes_area)!=0)
+                                if(mysqli_num_rows($semana_line)!=0)
                                 { 
-                                    while($r_mes_area=mysqli_fetch_array($mes_area))
+                                    while($r_semana_line=mysqli_fetch_array($semana_line))
                                     { 
                                         ?>
                                         <tr>
-                                            <th> <?php echo $r_mes_area['Mes']; ?></th> <!--Año-->
+                                            <th> <?php echo "Semana ".$r_semana_line['Semana']; ?></th> <!--Año-->
                                             <?php
                                             //bucle de productos/etiquetas
-                                            mysqli_data_seek($etiquetas_area, 0);
-                                            while($r_etiquetas_area=mysqli_fetch_array($etiquetas_area))
+                                            mysqli_data_seek($etiquetas_line, 0);
+                                            while($r_etiquetas_line=mysqli_fetch_array($etiquetas_line))
                                             { 
-                                             $ventas_mes_area=mysqli_query($con,"SELECT p.nombre as Producto, MONTH(v.fecha_de_venta) as Mes, SUM(d.cantidad) as Cantidad from syscsvd_ventas v join syscsvd_detalle_ventas d on v.id_venta = d.id_venta join syscsvd_productos p on d.id_producto = p.id_producto where YEAR(v.fecha_de_venta) = YEAR(CURRENT_DATE()) AND MONTH(v.fecha_de_venta)=".$r_mes_area['Mes']." and p.id_producto = ".$r_etiquetas_area['id_producto']." group by MONTH(v.fecha_de_venta), p.nombre;") ?>
-                                            <?php   if(mysqli_num_rows($ventas_mes_area)!=0)
+                                             $precio_semana_line=mysqli_query($con,"SELECT d.id_producto, p.nombre as Producto,  max(d.precio_compra) as PrecioUnidad from syscsvd_compras c join syscsvd_detalles_compras d on c.id_compra=d.id_compra join syscsvd_productos p on d.id_producto = p.id_producto where month(c.fecha_compra) = month(CURRENT_DATE()) AND week(c.fecha_compra)=".$r_semana_line['Semana']." and p.id_producto = ".$r_etiquetas_line['id_producto']." group by d.id_producto;") ?>
+                                            <?php   if(mysqli_num_rows($precio_semana_line)!=0)
                                                     { ?>
-                                                <?php  while($r_ventas_mes_area=mysqli_fetch_array($ventas_mes_area))
+                                                <?php  while($r_precio_semana_line=mysqli_fetch_array($precio_semana_line))
                                                         { ?>
-                                                        <td> <?php echo $r_ventas_mes_area['Cantidad']; ?> </td> 
+                                                        <td> <?php echo $r_precio_semana_line['PrecioUnidad']; ?> </td> 
                                                     <?php } ?>
                                                 <?php }
                                                 else{
@@ -565,7 +565,7 @@
                 type: 'line'
             },
             title: {
-                text: 'Ventas por mes'
+                text: 'Precio de compras'
             },
             xAxis: {
                 type: 'category'
@@ -573,7 +573,7 @@
             yAxis: {
                 allowDecimals: false,
                 title: {
-                    text: 'Cantidad'
+                    text: 'Precio'
                 }
             }
         });
@@ -636,6 +636,7 @@
         }
         .divgraficos{
             float: left;
+            background-color: white;
             width: 49.8%;
             margin: 0.1%;
             height: 450px;
@@ -645,7 +646,7 @@
         @media screen and (max-width:768px){
             .divgraficos{
                 width:100%;
-                height: 400px;
+                height: 27em;
             }
             #container-barras {
                 height: 200px !important;
