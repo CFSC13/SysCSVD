@@ -359,7 +359,7 @@ if($_GET[del]!="")
                                                             if(file_exists("fotos/".$r['foto']) && !empty($r['foto']))
                                                             {
                                                                 ?>
-                                                                <a href="fotos/<?php echo $r['foto'];?>" target="_blank"><img src="fotos/<?php echo $r['foto'];?>" width="100"></a>
+                                                                <a href="fotos/<?php echo $r['foto'];?>" target="_blank"><img src="fotos/<?php echo $r['foto'];?>" width="75" height="75"></a>
                                                                 
                                                                 <?php
                                                             }
