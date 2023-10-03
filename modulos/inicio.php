@@ -7,7 +7,7 @@
 ?>
 
 <div id="hero">
-    <h1 id="letra_hero">Te damos la bienvenida a SysCSVD.<br>¡Comienza a administrar tu empresa!</h1> 
+    <h1 id="letra_hero">Te damos la bienvenida a SysCSVD.<br>¡Comienza a administrar tu empresa!</h1><br><a id="link" href="https://docs.google.com/document/d/1rVgUZfXkngD86EXHvh8SDK2P5ZIMWIr0bqhybHYw1Q4/edit?usp=sharing">¡Manual de usuario aquí!<a>
 </div>
 <style>
     #hero{
@@ -32,6 +32,9 @@
     }
     #letra_hero{
         font-size:25px;
+    }
+    #link{
+        color: white;
     }
 </style>
 
