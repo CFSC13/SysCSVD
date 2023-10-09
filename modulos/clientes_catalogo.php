@@ -14,30 +14,10 @@ ini_set('display_errors', '0');
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="SysCSVD - Sistema de Gestión">
     <meta name="author" content="ADM">
-    <title>SysCSVD - Catalogo de Clientes</title>
+    <title>SysCSVD - Catalogo de Productos</title>
 </head>
 <body>
-    <h1 id="titulo">Catálogo</h1> 
-    <?php
-        $showform="";
-        $showtable="";
-        if($_GET[ver]!=0)
-        {
-            $sql=mysqli_query($con,"select *from syscsvd_productos where id_producto=$_GET[ver]");
-                if(mysqli_num_rows($sql)!=0)
-                {   
-                    $r=mysqli_fetch_array($sql);
-                }
-                $url="home.php?pagina=productos&mod=ok";
-                $showform="show";
-        }
-            else
-            {
-                $url="home.php?pagina=productos&add=ok";
-                $showtable="show";
-            }
-    ?>
-
+    <h1 id="titulo">Catálogo de Productos</h1> 
     <table style="width: 100%; ">
         <thead>
             <tr>
@@ -60,7 +40,7 @@ ini_set('display_errors', '0');
             </tr>
         </tfoot>
         <tbody>
-        <?php $q=mysqli_query($con,"SELECT p.id_producto, p.foto, p.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
+        <?php $q=mysqli_query($con,"SELECT P.id_producto, P.foto, P.Nombre as 'NombreP', P.Precio as 'PrecioP', P.stock as 'StockP', P.codigo_barra as 'codigo_barraP',
                                     C.Nombre as 'NonbreC', M.nombre as 'marca', libreria
                                     FROM syscsvd_productos P 
                                     JOIN syscsvd_categorias C 

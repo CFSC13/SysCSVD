@@ -296,6 +296,7 @@ if($_GET['del']!="")
             $("#cantidad").val('');
             $('#productos').val(null).trigger('change');
             $("#productos").focus();
+            $("#precio_compra").val('');
         }
             else
             {
