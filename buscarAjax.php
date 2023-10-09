@@ -1,9 +1,8 @@
 
-<?php;
+<?php
 include("includes/conexion.php");
 conectar()
 
- 
 // comprobar si tenemos los parametros w1 y w2 en la URL
 if (isset($_GET["w1"])) {
       // asignar w1 a la variable $codigo
@@ -24,8 +23,7 @@ if (isset($_GET["w1"])) {
                 }
             $jsonstring = json_encode($json);
             echo $jsonstring;
-            }           
-                                                                                                                             
+            }                                        
 ?>
 
 
