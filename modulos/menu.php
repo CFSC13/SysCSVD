@@ -1,13 +1,13 @@
 <?php
 if($_SESSION['user']==1)
 {
-	$sql=mysqli_query($con,"select i.*, gm.icono from syscsvd_items_interno i, syscsvd_grupos_menu gm where i.id_grupo=gm.id_grupo order by i.id_grupo, i.nombre_item");
-	
+ $sql=mysqli_query($con,"select i.*, gm.icono from syscsvd_items_interno i, syscsvd_grupos_menu gm where i.id_grupo=gm.id_grupo order by gm.nombre_grupo, i.nombre_item");
+ 
 }
-	else
-	{
-		$sql=mysqli_query($con, "select i.*, gm.icono from syscsvd_items_interno i, syscsvd_items_x_usuario iu, syscsvd_usuarios u, syscsvd_grupos_menu gm where i.id_grupo=gm.id_grupo and iu.id_item=i.id_item and iu.id_usuario=u.id_usuario and u.id_usuario=".$_SESSION['user']." order by i.id_grupo, i.nombre_item");
-	}		
+ else
+ {
+  $sql=mysqli_query($con, "select i.*, gm.icono from syscsvd_items_interno i, syscsvd_items_x_usuario iu, syscsvd_usuarios u, syscsvd_grupos_menu gm where i.id_grupo=gm.id_grupo and iu.id_item=i.id_item and iu.id_usuario=u.id_usuario and u.id_usuario=".$_SESSION['user']." order by gm.nombre_grupo, i.nombre_item");
+ }
 
 		$grupo=0;
 		$total=mysqli_num_rows($sql);
