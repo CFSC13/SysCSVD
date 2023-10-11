@@ -20,8 +20,8 @@ if($_SESSION[user]==0)
                         <thead>
                         
                         <tr>
-                            <th>Codigo de Barras</th>
                             <th>Nombre</th>
+                            <th>Codigo de Barras</th>
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
@@ -34,8 +34,8 @@ if($_SESSION[user]==0)
                         </thead>
                         <tfoot>
                         <tr>
-                            <th>Codigo de Barras</th>
                             <th>Nombre</th>
+                            <th>Codigo de Barras</th>
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
@@ -58,14 +58,11 @@ if($_SESSION[user]==0)
                                 if(mysqli_num_rows($q)!=0){
                                     while($r=mysqli_fetch_array($q)){?>
                                         <tr>
+                                        <td><?php echo $r['NombreP']; ?></td>
                                         <td><?php echo $r['codigo_barraP']; ?></td>
-                                            <td><?php echo $r['NombreP']; ?></td>
-                                            <td><?php echo $r['descripcion']; ?></td>
-
-                                            <td>$ <?php echo number_format($r['PrecioP'],2,',','.'); ?></td>
-                                            <td><?php echo number_format($r['StockP'],0,',','.'); ?></td>
-                                            
-                                            
+                                        <td><?php echo $r['descripcion']; ?></td>
+                                        <td>$ <?php echo number_format($r['PrecioP'],2,',','.'); ?></td>
+                                        <td><?php echo number_format($r['StockP'],0,',','.'); ?></td>
                                         <td>
                                             <?php
                                             if(file_exists("fotos/".$r['foto']) && !empty($r['foto']))

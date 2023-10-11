@@ -192,7 +192,7 @@ if($_GET['del']!="")
                             <div class="form-group">
                                     
                           
-                            <div style="width: 270px" id="reader"></div>
+                            <div style="width: 243px" id="reader"></div>
                        
                                     <br>                             
                                <fieldset class="border p-2">

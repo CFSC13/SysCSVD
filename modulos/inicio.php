@@ -16,7 +16,7 @@
         justify-content: center;
         text-align: center;
         flex-direction: column;
-        height: 30vh;
+        height: 35vh;
         color:white;
         background-image: linear-gradient(
             0deg,
@@ -31,10 +31,11 @@
         margin-bottom: 3%;
     }
     #letra_hero{
-        font-size:25px;
+        font-size:20px;
     }
     #link{
         color: black;
+        font-size:15px;
     }
 </style>
 

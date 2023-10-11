@@ -226,11 +226,17 @@ if($_GET[del]!="")
 
                                 <div class="form-group">
                                     <label for="nombre">Foto</label>
-                                    <input type="file" name="foto" id="foto" >
+                                    <input type="file" name="foto" id="foto" class="form-control bg-light border-0 small file-select">
                                     <input type="hidden" name="foto_actual" id="foto_actual" value="<?php echo $r['foto'];?>">
                                 </div>
                                 <br>
 
+                                <style>
+                                    .file-select {
+                                        font-size:15px;
+                                    }
+                                </style>
+                                
                                 <div class="form-group">
                                     <label for="nombre">Categoría</label>
                                     <select name="id_categoria" id="id_categoria" class="form-control bg-light border-0 small" placeholder="Grupo"  aria-label="Grupo" aria-describedby="basic-addon2" style="margin-right: 1%;" required>
