@@ -382,7 +382,7 @@ $(document).on('select2:open', () => {
 <script>
     
     var html5QrcodeScanner = new Html5QrcodeScanner(
-	"reader", { fps: 600, qrbox: 250 });
+	"reader", { fps: 600, qrbox: 200 });
     html5QrcodeScanner.render(onScanSuccess);
 
 
