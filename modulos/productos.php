@@ -196,7 +196,7 @@ if($_GET[del]!="")
                                 <!--Fila 1-->
                                 <div class="form-group">
                                     <label for="nombre">Código de Barras</label>
-                                    <input type="text" class="form-control" id="codigo_barra" name="codigo_barra" value="<?php echo $r['codigo_barra']; ?>" required>
+                                    <input type="text" class="form-control" id="codigo_barra" name="codigo_barra" value="<?php echo $r['codigo_barra']; ?>" >
                                 </div>
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
